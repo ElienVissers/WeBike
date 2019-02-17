@@ -26,6 +26,7 @@ export class FadeInImage extends React.Component {
             <Animated.Image
                 {...this.props}
                 onLoad={this.onLoad}
+                resizeMode="contain"
                 style={[
                     {
                         opacity: this.state.fadeValue,
