@@ -5,6 +5,8 @@ import { createStackNavigator, createAppContainer } from "react-navigation";
 import {FadeInImage} from './FadeInImage';
 import {ProfileLogo} from './ProfileLogo';
 
+//////////////////////////////////////////////////////////////////////////////// remove the back button from this screen
+
 export class CurrentWeatherScreen extends React.Component {
     constructor(props) {
         super(props);

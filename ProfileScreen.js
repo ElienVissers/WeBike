@@ -11,7 +11,11 @@ export class ProfileScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            routes: [] //or get the routes from redux
+            routes: [], //or get the routes from redux
+            index0: 0,
+            index1: 1,
+            index2: 2,
+            index3: 3
         };
         this.onPress = this.onPress.bind(this);
         this.addRoute = this.addRoute.bind(this);
@@ -23,15 +27,42 @@ export class ProfileScreen extends React.Component {
             title: 'Edit your profile, ' + navigation.getParam('name', 'cyclist')
         };
     };
+    componentDidMount() {
+        this.setState({
+            name: this.props.name,
+            city: this.props.city
+        });
+        if (this.state.routes[0]) {
+            this.setState({
+                index0: "0existing"
+            });
+        }
+        if (this.state.routes[1]) {
+            this.setState({
+                index1: "1existing"
+            });
+        }
+        if (this.state.routes[2]) {
+            this.setState({
+                index2: "2existing"
+            });
+        }
+        if (this.state.routes[3]) {
+            this.setState({
+                index3: "3existing"
+            });
+        }
+    }
     onPress() {
+        console.log("local state (this.state.routes): ", this.state.routes);
         // save all the data from local state to redux
+        // put in a check that the city is real?
         this.props.navigation.navigate('CurrentWeatherRoute', {
             name: this.state.name,
             city: this.state.city
         });
     }
 
-    ////fix addRoute, updateBikeRoute and removeBikeRoute (updating local state)
     addRoute() {
         console.log("route added");
         this.setState(prevState => ({
@@ -39,16 +70,65 @@ export class ProfileScreen extends React.Component {
         }));
     }
     updateBikeRoute(routeObject) {
-        this.setState(prevState => ({
-            routes: prevState.routes.push(routeObject)
-        }));
+        if (typeof routeObject.index == "string") {
+            //EXISTING BIKE ROUTE --> replace the routeObject on index arrIndex of the state.routes
+            let arrIndex = routeObject.index.slice(0,1);
+            this.setState(prevState => ({
+                routes: prevState.routes.map((item, index) => {
+                    if (index == arrIndex) {
+                        return routeObject;
+                    } else {
+                        return item;
+                    }
+                })
+            }));
+        } else {
+            //NEW BIKE ROUTE --> replace the tempRoute string in the state.routes with the routeObject
+            this.setState(prevState => ({
+                routes: prevState.routes.map(
+                    i => {
+                        if (i == "tempRoute") {
+                            return routeObject;
+                        } else {
+                            return i;
+                        }
+                    }
+                )
+            }));
+        }
     }
-    removeBikeRoute(route_id) {
-        this.setState(prevState => ({
-            routes: prevState.routes.filter(route_id)
-        }));
+
+    removeBikeRoute(route_index) {
+        console.log("this.state.routes in removeBikeRoute:", this.state.routes);
+        console.log("route_index in removeBikeRoute:", route_index);
+        if (typeof route_index == "string") {
+            //EXISTING BIKE ROUTE
+            let arrIndex = route_index.slice(0,1);
+            console.log("arrIndex: ", arrIndex);
+            this.setState(prevState => ({
+                routes: prevState.routes.filter((item, index) => {
+                    if (item.index == arrIndex) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                })
+            }), () => console.log("this.state.routes (existing):", this.state.routes));
+        } else {
+            //NEW BIKE ROUTE
+            this.setState(prevState => ({
+                routes: prevState.routes.filter(
+                    i => {
+                        if (i.index == route_index) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+                )
+            }));
+        }
     }
-    ////////////////////////////////////////////////////////////////////////////
 
     render() {
         const name = this.props.navigation.getParam('name', 'cyclist');
@@ -79,19 +159,19 @@ export class ProfileScreen extends React.Component {
                     <Text style={styles.title}>Weekly cycling routes:</Text>
 
                     {this.state.routes.length > 0 && <View>
-                        <NewRoute updateBikeRoute={this.updateBikeRoute}/>
+                        <NewRoute updateBikeRoute={this.updateBikeRoute} removeBikeRoute={this.removeBikeRoute} index={this.state.index0} />
                     </View>}
 
                     {this.state.routes.length > 1 && <View>
-                        <NewRoute updateBikeRoute={this.updateBikeRoute} />
+                        <NewRoute updateBikeRoute={this.updateBikeRoute} removeBikeRoute={this.removeBikeRoute} index={this.state.index1} />
                     </View>}
 
                     {this.state.routes.length > 2 && <View>
-                        <NewRoute updateBikeRoute={this.updateBikeRoute} />
+                        <NewRoute updateBikeRoute={this.updateBikeRoute} removeBikeRoute={this.removeBikeRoute} index={this.state.index2} />
                     </View>}
 
                     {this.state.routes.length > 3 && <View>
-                        <NewRoute updateBikeRoute={this.updateBikeRoute} />
+                        <NewRoute updateBikeRoute={this.updateBikeRoute} removeBikeRoute={this.removeBikeRoute} index={this.state.index3} />
                     </View>}
 
                     <Text style={{color: 'white', fontSize: 20, flex: 1}}>Spacing</Text>

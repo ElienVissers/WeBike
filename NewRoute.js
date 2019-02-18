@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, Picker, StyleSheet, View, ScrollView } from "react-native";
+import { Text, Picker, StyleSheet, View, ScrollView, Alert } from "react-native";
 
 import {AddButton} from './AddButton';
 
@@ -17,10 +17,24 @@ export class NewRoute extends React.Component {
         this.removeRoute = this.removeRoute.bind(this);
     }
     saveRoute() {
-        this.setState({
-            saved: true
-        });
-        //put info in ProfileScreen --> call updateBikeRoute and pass it an object containing the new or edited route
+        let start = parseInt(this.state.start.split("-")[0], 10);
+        let arrive = parseInt(this.state.arrive.split("-")[1], 10);
+        if (start < arrive) {
+            this.props.updateBikeRoute({
+                days: this.state.days,
+                start: this.state.start,
+                arrive: this.state.arrive,
+                index: this.props.index
+            });
+            this.setState({
+                saved: true
+            });
+        } else {
+            Alert.alert(
+                'Wow, you cycle impossibly fast!',
+                "The arrival time must be after the departure time."
+            );
+        }
     }
     editRoute() {
         this.setState({
@@ -28,7 +42,7 @@ export class NewRoute extends React.Component {
         });
     }
     removeRoute() {
-        //call removeBikeRoute and pass id this routes id or smth
+        this.props.removeBikeRoute(this.props.index);
     }
     render() {
         return (
