@@ -39,7 +39,7 @@ export class CurrentWeatherScreen extends React.Component {
           <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "white" }}>
             <FadeInImage source={require('./assets/bike.png')} style={{flex:1, height: 150, width: 150}} />
             <View style={{flex: 2}}>
-                <Text>Profile Screen</Text>
+                <Text>Current Weather Screen</Text>
             </View>
           </View>
         );

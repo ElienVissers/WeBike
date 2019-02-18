@@ -1,39 +1,149 @@
 import React from "react";
-import { View, Text, Button, Image, TextInput, TouchableWithoutFeedback } from "react-native";
+import { View, Text, Image, TextInput, TouchableWithoutFeedback, StyleSheet } from "react-native";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { Button } from 'react-native-elements';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
-import {FadeInImage} from './FadeInImage';
-import {ProfileLogo} from './ProfileLogo';
+import {AddButton} from './AddButton';
+import {NewRoute} from './NewRoute';
+
 
 export class ProfileScreen extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            routes: [] //or get the routes from redux
+        };
+        this.onPress = this.onPress.bind(this);
+        this.addRoute = this.addRoute.bind(this);
+        this.updateBikeRoute = this.updateBikeRoute.bind(this);
+        this.removeBikeRoute = this.removeBikeRoute.bind(this);
     }
     static navigationOptions = ({ navigation }) => {
         return {
             title: 'Edit your profile, ' + navigation.getParam('name', 'cyclist')
         };
     };
+    onPress() {
+        // save all the data from local state to redux
+        this.props.navigation.navigate('CurrentWeatherRoute', {
+            name: this.state.name,
+            city: this.state.city
+        });
+    }
+
+    ////fix addRoute, updateBikeRoute and removeBikeRoute (updating local state)
+    addRoute() {
+        console.log("route added");
+        this.setState(prevState => ({
+            routes: prevState.routes.push("tempRoute");
+        }));
+    }
+    updateBikeRoute(routeObject) {
+        this.setState(prevState => ({
+            routes: prevState.routes.push(routeObject)
+        }));
+    }
+    removeBikeRoute(route_id) {
+        this.setState(prevState => ({
+            routes: prevState.routes.filter(route_id)
+        }));
+    }
+    ////////////////////////////////////////////////////////////////////////////
+
     render() {
         const name = this.props.navigation.getParam('name', 'cyclist');
+        const city = this.props.navigation.getParam('city', 'hometown');
         return (
-          <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "white" }}>
-            <FadeInImage source={require('./assets/bike.png')} style={{flex:1, height: 150, width: 150}} />
-            <View style={{flex: 2}}>
-                <Text>Profile Screen</Text>
-                <Text>Hi {name}, set up your profile here! :)</Text>
-                <Text>input name, city and weekly cycling schedule</Text>
-                <Text>type of bike? weekly goal in km?</Text>
-                <Button
-                    title="Go to profile... again"
-                    onPress={() => this.props.navigation.push('ProfileRoute')}
-                />
-                <Button
-                    title="Go to Home"
-                    onPress={() => this.props.navigation.navigate('WelcomeRoute')}
-                />
-            </View>
-          </View>
+            <KeyboardAwareScrollView contentContainerStyle={styles.container} enableOnAndroid={true}>
+                <View style={styles.mainContent}>
+                    <View style={{marginTop: 50, marginBottom: 50}}>
+                        <View style={styles.inputContainer}>
+                            <TextInput style={styles.input}
+                                defaultValue={name}
+                                placeholder="name"
+                                onChangeText={text => this.setState({
+                                    name: text
+                                })}
+                            />
+                        </View>
+                        <View style={styles.inputContainer}>
+                            <TextInput style={styles.input}
+                                defaultValue={city}
+                                placeholder="city"
+                                onChangeText={text => this.setState({
+                                    city: text
+                                })}
+                            />
+                        </View>
+                    </View>
+                    <Text style={styles.title}>Weekly cycling routes:</Text>
+
+                    {this.state.routes.length > 0 && <View>
+                        <NewRoute updateBikeRoute={this.updateBikeRoute}/>
+                        <Text>Remove this route button reallyyyyy</Text>
+                    </View>}
+
+                    {this.state.routes.length > 1 && <View>
+                        <NewRoute updateBikeRoute={this.updateBikeRoute} />
+                        <Text>Remove this route button</Text>
+                    </View>}
+
+                    {this.state.routes.length > 2 && <View>
+                        <NewRoute updateBikeRoute={this.updateBikeRoute} />
+                        <Text>Remove this route button</Text>
+                    </View>}
+
+                    {this.state.routes.length > 3 && <View>
+                        <NewRoute updateBikeRoute={this.updateBikeRoute} />
+                        <Text>Remove this route button</Text>
+                    </View>}
+
+                    <AddButton
+                        text="add bike route"
+                        onPress={this.addRoute}
+                    />
+                    <Button buttonStyle={styles.button}
+                        title="SAVE"
+                        raised={true}
+                        onPress={this.onPress}
+                    />
+                </View>
+            </KeyboardAwareScrollView>
         );
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "white"
+    },
+    mainContent: {
+        flex: 3
+    },
+    title: {
+        fontWeight: 'bold',
+        fontSize: 25,
+        textAlign: 'center',
+        marginBottom: 15
+    },
+    inputContainer: {
+        borderBottomWidth: 1,
+        borderBottomColor: 'gold'
+    },
+    input: {
+        textAlign: 'center',
+        height: 40,
+        color: 'black'
+    },
+    addButton: {
+        borderColor: "#7BC9D3",
+        color: "#7BC9D3"
+    },
+    button: {
+        backgroundColor: "#7BC9D3"
+    }
+});

@@ -5,7 +5,6 @@ import { Button } from 'react-native-elements';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
 import {FadeInImage} from './FadeInImage';
-import {ProfileLogo} from './ProfileLogo';
 
 export class WelcomeScreen extends React.Component {
     constructor(props) {
@@ -39,18 +38,16 @@ export class WelcomeScreen extends React.Component {
                     <Text style={styles.title}>Welcome to WeBike</Text>
                     <Text style={styles.text}>Please fill in your name and city!</Text>
                     <View style={{marginTop: 50, marginBottom: 50}}>
-                        <View style={{borderBottomWidth: 1, borderBottomColor: 'gold'}}>
+                        <View style={styles.inputContainer}>
                             <TextInput style={styles.input}
-                                style={{height: 40, color: 'black'}}
                                 placeholder="name"
                                 onChangeText={text => this.setState({
                                     name: text
                                 })}
                             />
                         </View>
-                        <View style={{borderBottomWidth: 1, borderBottomColor: 'gold'}}>
+                        <View style={styles.inputContainer}>
                             <TextInput style={styles.input}
-                                style={{height: 40, color: 'black'}}
                                 placeholder="city"
                                 onChangeText={text => this.setState({
                                     city: text
@@ -92,8 +89,14 @@ const styles = StyleSheet.create({
     text: {
         textAlign: 'center'
     },
+    inputContainer: {
+        borderBottomWidth: 1,
+        borderBottomColor: 'gold'
+    },
     input: {
-        textAlign: 'center'
+        textAlign: 'center',
+        height: 40,
+        color: 'black'
     },
     button: {
         backgroundColor: "#7BC9D3"

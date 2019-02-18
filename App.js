@@ -31,7 +31,25 @@ const AppNavigator = createStackNavigator(
 const AppContainer = createAppContainer(AppNavigator);
 
 export default class App extends React.Component {
-  render() {
-    return <AppContainer />;
-  }
+    constructor() {
+        super();
+        this.state = {};
+    }
+    // componentDidMount() {
+    //     axios.get('/user').then(results => {
+    //         this.setState({
+    //             first: results.data.rows[0].first,
+    //             last: results.data.rows[0].last,
+    //             pictureUrl: results.data.rows[0].url,
+    //             bio: results.data.rows[0].bio,
+    //             color: results.data.rows[0].color,
+    //             shape: results.data.rows[0].shape
+    //         });
+    //     }).catch(err => {
+    //         console.log('error in mount app: ', err);
+    //     });
+    // }
+    render() {
+        return <AppContainer />;
+    }
 }
