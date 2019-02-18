@@ -94,7 +94,8 @@ export class ProfileScreen extends React.Component {
                         <NewRoute updateBikeRoute={this.updateBikeRoute} />
                     </View>}
 
-                    //add a conditional so that the bike route does NOT render when there is a tempRoute string in the this.state.routes
+                    <Text style={{color: 'white', fontSize: 10, flex: 1}}>Spacing</Text>
+
                     {this.state.routes.length < 4 && <AddButton
                         style={{flex: 1, marginBottom: 30}}
                         text="add bike route"
