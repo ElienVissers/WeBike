@@ -33,10 +33,10 @@ export class NewRoute extends React.Component {
     render() {
         return (
             <ScrollView>
-                {!this.state.saved && <View>
+                {!this.state.saved && <View style={styles.yellowContainer}>
                     <Text style={styles.text}>When do you cycle (or want to)?</Text>
                     <Picker
-                        style={{width: 150, color: "#7BC9D3"}}
+                        style={styles.picker}
                         selectedValue={this.state.days}
                         onValueChange={(value) => this.setState({days: value})}
                     >
@@ -45,7 +45,7 @@ export class NewRoute extends React.Component {
                     </Picker>
                     <Text style={styles.text}>What time do you start?</Text>
                     <Picker
-                        style={{width: 150, color: "#7BC9D3"}}
+                        style={styles.picker}
                         selectedValue={this.state.start}
                         onValueChange={(value) => this.setState({start: value})}
                     >
@@ -68,7 +68,7 @@ export class NewRoute extends React.Component {
                     </Picker>
                     <Text style={styles.text}>Wat time do you arrive?</Text>
                     <Picker
-                        style={{width: 150, color: "#7BC9D3"}}
+                        style={styles.picker}
                         selectedValue={this.state.arrive}
                         onValueChange={(value) => this.setState({arrive: value})}
                     >
@@ -91,18 +91,19 @@ export class NewRoute extends React.Component {
                         <Picker.Item label="23-00" value="23-00" />
                     </Picker>
                     <AddButton
-                        text="save bike route"
+                        text="save this route"
                         onPress={this.saveRoute}
                     />
+
                     <AddButton
-                        text="remove bike route"
+                        text="remove this route"
                         onPress={this.removeRoute}
                     />
                 </View>}
 
                 {this.state.saved && <View style={{flexDirection: "row"}}>
-                    {this.state.days == "weekdays" && <Text style={{marginTop: 15, marginBottom: 10, marginRight: 10}}>On weekdays from {this.state.start}h untill {this.state.arrive}h.</Text>}
-                    {this.state.days == "weekend" && <Text style={{marginTop: 15, marginBottom: 10, marginRight: 10}}>In the weekend from {this.state.start}h untill {this.state.arrive}h.</Text>}
+                    {this.state.days == "weekdays" && <Text style={styles.savedText}>On weekdays from {this.state.start}h untill {this.state.arrive}h.</Text>}
+                    {this.state.days == "weekend" && <Text style={styles.savedText}>In the weekend from {this.state.start}h untill {this.state.arrive}h.</Text>}
                     <AddButton
                         text="edit"
                         onPress={this.editRoute}
@@ -114,8 +115,25 @@ export class NewRoute extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    picker: {
+        width: 150,
+        color: "#7BC9D3"
+    },
     text: {
         paddingTop: 5,
         paddingBottom: 5,
-    }
+    },
+    savedText: {
+        marginTop: 15,
+        marginBottom: 10,
+        marginRight: 10
+    },
+    yellowContainer: {
+        borderWidth: 1,
+        borderColor: 'gold',
+        paddingTop: 5,
+        paddingBottom: 5,
+        paddingLeft: 15,
+        paddingRight: 15,
+        marginBottom: 10}
 });

@@ -22,8 +22,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 5,
         alignSelf: 'flex-start',
-        marginTop: 10,
-        marginBottom: 10
+        marginTop: 5,
+        marginBottom: 5
     },
     text: {
         color: "#7BC9D3",

@@ -1,6 +1,5 @@
 import React from "react";
-import { View, Text, Image, TextInput, TouchableWithoutFeedback, StyleSheet } from "react-native";
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { View, Text, Image, TextInput, TouchableWithoutFeedback, StyleSheet, ScrollView } from "react-native";
 import { Button } from 'react-native-elements';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
@@ -36,7 +35,7 @@ export class ProfileScreen extends React.Component {
     addRoute() {
         console.log("route added");
         this.setState(prevState => ({
-            routes: prevState.routes.push("tempRoute");
+            routes: [...prevState.routes, "tempRoute"]
         }));
     }
     updateBikeRoute(routeObject) {
@@ -55,8 +54,8 @@ export class ProfileScreen extends React.Component {
         const name = this.props.navigation.getParam('name', 'cyclist');
         const city = this.props.navigation.getParam('city', 'hometown');
         return (
-            <KeyboardAwareScrollView contentContainerStyle={styles.container} enableOnAndroid={true}>
-                <View style={styles.mainContent}>
+            <ScrollView contentContainerStyle={styles.container}>
+                <ScrollView style={styles.mainContent}>
                     <View style={{marginTop: 50, marginBottom: 50}}>
                         <View style={styles.inputContainer}>
                             <TextInput style={styles.input}
@@ -81,35 +80,36 @@ export class ProfileScreen extends React.Component {
 
                     {this.state.routes.length > 0 && <View>
                         <NewRoute updateBikeRoute={this.updateBikeRoute}/>
-                        <Text>Remove this route button reallyyyyy</Text>
                     </View>}
 
                     {this.state.routes.length > 1 && <View>
                         <NewRoute updateBikeRoute={this.updateBikeRoute} />
-                        <Text>Remove this route button</Text>
                     </View>}
 
                     {this.state.routes.length > 2 && <View>
                         <NewRoute updateBikeRoute={this.updateBikeRoute} />
-                        <Text>Remove this route button</Text>
                     </View>}
 
                     {this.state.routes.length > 3 && <View>
                         <NewRoute updateBikeRoute={this.updateBikeRoute} />
-                        <Text>Remove this route button</Text>
                     </View>}
 
-                    <AddButton
+                    //add a conditional so that the bike route does NOT render when there is a tempRoute string in the this.state.routes
+                    {this.state.routes.length < 4 && <AddButton
+                        style={{flex: 1, marginBottom: 30}}
                         text="add bike route"
                         onPress={this.addRoute}
-                    />
+                    />}
+
+                    <Text style={{color: 'white', fontSize: 20, flex: 1}}>Spacing</Text>
+
                     <Button buttonStyle={styles.button}
                         title="SAVE"
                         raised={true}
                         onPress={this.onPress}
                     />
-                </View>
-            </KeyboardAwareScrollView>
+                </ScrollView>
+            </ScrollView>
         );
     }
 }
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
         backgroundColor: "white"
     },
     mainContent: {
-        flex: 3
+        flex: 1
     },
     title: {
         fontWeight: 'bold',
@@ -139,11 +139,9 @@ const styles = StyleSheet.create({
         height: 40,
         color: 'black'
     },
-    addButton: {
-        borderColor: "#7BC9D3",
-        color: "#7BC9D3"
-    },
     button: {
-        backgroundColor: "#7BC9D3"
+        backgroundColor: "#7BC9D3",
+        paddingTop: 5,
+        paddingBottom: 5
     }
 });
