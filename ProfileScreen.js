@@ -55,7 +55,7 @@ export class ProfileScreen extends React.Component {
         const city = this.props.navigation.getParam('city', 'hometown');
         return (
             <ScrollView contentContainerStyle={styles.container}>
-                <ScrollView style={styles.mainContent}>
+                <ScrollView style={styles.mainContent} showsVerticalScrollIndicator={false}>
                     <View style={{marginTop: 50, marginBottom: 50}}>
                         <View style={styles.inputContainer}>
                             <TextInput style={styles.input}
@@ -94,7 +94,7 @@ export class ProfileScreen extends React.Component {
                         <NewRoute updateBikeRoute={this.updateBikeRoute} />
                     </View>}
 
-                    <Text style={{color: 'white', fontSize: 10, flex: 1}}>Spacing</Text>
+                    <Text style={{color: 'white', fontSize: 20, flex: 1}}>Spacing</Text>
 
                     {this.state.routes.length < 4 && <AddButton
                         style={{flex: 1, marginBottom: 30}}
