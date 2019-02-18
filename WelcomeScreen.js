@@ -1,5 +1,7 @@
 import React from "react";
-import { View, Text, Button, Image, TextInput, TouchableWithoutFeedback, StyleSheet, Alert } from "react-native";
+import { View, Text, Image, TextInput, StyleSheet, Alert } from "react-native";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { Button } from 'react-native-elements';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
 import {FadeInImage} from './FadeInImage';
@@ -31,7 +33,7 @@ export class WelcomeScreen extends React.Component {
     }
     render() {
         return (
-            <View style={styles.container}>
+            <KeyboardAwareScrollView contentContainerStyle={styles.container} enableOnAndroid={true}>
                 <FadeInImage source={require('./assets/bike.png')} style={styles.mainImage} />
                 <View style={styles.mainContent}>
                     <Text style={styles.title}>Welcome to WeBike</Text>
@@ -56,12 +58,13 @@ export class WelcomeScreen extends React.Component {
                             />
                         </View>
                     </View>
-                    <Button style={styles.button}
+                    <Button buttonStyle={styles.button}
                         title="Start cycling!"
+                        raised={true}
                         onPress={this.onPress}
                     />
                 </View>
-            </View>
+            </KeyboardAwareScrollView>
         );
     }
 }
@@ -91,5 +94,8 @@ const styles = StyleSheet.create({
     },
     input: {
         textAlign: 'center'
+    },
+    button: {
+        backgroundColor: "#7BC9D3"
     }
 });

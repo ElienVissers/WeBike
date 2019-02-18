@@ -18,7 +18,7 @@ const AppNavigator = createStackNavigator(
         initialRouteName: isNewUser ? "WelcomeRoute" : "CurrentWeatherRoute",
         defaultNavigationOptions: {
             headerStyle: {
-                backgroundColor: 'skyblue'
+                backgroundColor: "#7BC9D3"
             },
             headerTintColor: 'white',
             headerTitleStyle: {
