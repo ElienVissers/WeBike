@@ -122,10 +122,6 @@ export class NewRoute extends React.Component {
                         onPress={this.saveRoute}
                     />
 
-                    <AddButton
-                        text="remove this route"
-                        onPress={this.removeRoute}
-                    />
                 </View>}
 
                 {this.state.saved && <View style={{flexDirection: "row"}}>
@@ -164,3 +160,5 @@ const styles = StyleSheet.create({
         paddingRight: 15,
         marginBottom: 10}
 });
+
+// TO DO: fix bug when removing bike routes before adding this button again (under save this route) <AddButton text="remove this route" onPress={this.removeRoute} />

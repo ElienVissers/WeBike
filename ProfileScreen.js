@@ -26,7 +26,7 @@ export class ProfileScreen extends React.Component {
     }
     static navigationOptions = ({ navigation }) => {
         return {
-            title: 'Edit your profile, ' + navigation.getParam('name', 'cyclist') || this.state.name
+            title: 'Edit your profile'
         };
     };
     componentWillMount() {

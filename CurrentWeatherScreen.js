@@ -5,7 +5,6 @@ import { createStackNavigator, createAppContainer } from "react-navigation";
 import {FadeInImage} from './FadeInImage';
 import {ProfileLogo} from './ProfileLogo';
 
-//////////////////////////////////////////////////////////////////////////////// remove the back button from this screen
 
 export class CurrentWeatherScreen extends React.Component {
     constructor(props) {
@@ -15,7 +14,7 @@ export class CurrentWeatherScreen extends React.Component {
     }
     static navigationOptions = ({navigation}) => {
         return {
-            title: navigation.getParam('title', 'Welcome!'),
+            title: 'WeBike',
             headerRight: (
                 <TouchableWithoutFeedback
                     onPress={navigation.getParam('editProfile')}
