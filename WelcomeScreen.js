@@ -24,7 +24,7 @@ export class WelcomeScreen extends React.Component {
                 city: this.state.city
             });
             AsyncStorage.setItem('firstProfile', firstProfileString).then(() => {
-                this.props.navigation.navigate('ProfileRoute');
+                this.props.navigation.navigate('App');
             }).catch(err => {
                 console.log("err while saving name and city in WelcomeScreen: ", err);
             });

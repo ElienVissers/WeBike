@@ -1,21 +1,19 @@
 import React from "react";
 import { View, Text, Button, Image, TextInput, TouchableWithoutFeedback, AsyncStorage } from "react-native";
-import { createStackNavigator, createAppContainer } from "react-navigation";
+import { createSwitchNavigator, createStackNavigator, createAppContainer } from "react-navigation";
 
 import {WelcomeScreen} from './WelcomeScreen';
 import {ProfileScreen} from './ProfileScreen';
 import {CurrentWeatherScreen} from './CurrentWeatherScreen';
+import {LoadingScreen} from './LoadingScreen';
 
-
-
-const AppNavigator = createStackNavigator(
+const AppStack = createStackNavigator(
     {
-        WelcomeRoute: WelcomeScreen,
         ProfileRoute: ProfileScreen,
         CurrentWeatherRoute: CurrentWeatherScreen
     },
     {
-        initialRouteName: isNewUser ? "WelcomeRoute" : "CurrentWeatherRoute",
+        initialRouteName: "CurrentWeatherRoute",
         defaultNavigationOptions: {
             headerStyle: {
                 backgroundColor: "#7BC9D3"
@@ -28,7 +26,22 @@ const AppNavigator = createStackNavigator(
     }
 );
 
-const AppContainer = createAppContainer(AppNavigator);
+const RegisterStack = createStackNavigator(
+    {
+        WelcomeRoute: WelcomeScreen
+    }
+);
+
+const AppContainer = createAppContainer(createSwitchNavigator(
+    {
+        LoadingRoute: LoadingScreen,
+        App: AppStack,
+        Register: RegisterStack
+    },
+    {
+        initialRouteName: "LoadingRoute"
+    }
+));
 
 export default class App extends React.Component {
     constructor() {
@@ -37,6 +50,7 @@ export default class App extends React.Component {
         };
     }
     componentDidMount() {
+        var isNewUser;
         AsyncStorage.getItem('userProfile').then(profileString => {
             if (profileString) {
                 var profile = JSON.parse(profileString);
@@ -51,6 +65,9 @@ export default class App extends React.Component {
                     isNewUser = false;
                     console.log("isNewUser: ", isNewUser);
                 });
+            }
+            else {
+                isNewUser = true;
             }
         }).catch(err => {
             console.log("err loading app: ", err);

@@ -215,22 +215,34 @@ export class ProfileScreen extends React.Component {
 
                     {this.state.routes.length > 0 && <View>
                         <NewRoute updateBikeRoute={this.updateBikeRoute} removeBikeRoute={this.removeBikeRoute} index={this.state.index0}
-                        saved={this.state.index0 == "0existing"} />
+                        saved={this.state.index0 == "0existing"}
+                        days={this.state.routes[0].days}
+                        start={this.state.routes[0].start}
+                        arrive={this.state.routes[0].arrive} />
                     </View>}
 
                     {this.state.routes.length > 1 && <View>
                         <NewRoute updateBikeRoute={this.updateBikeRoute} removeBikeRoute={this.removeBikeRoute} index={this.state.index1}
-                        saved={this.state.index1 == "1existing"} />
+                        saved={this.state.index1 == "1existing"}
+                        days={this.state.routes[1].days}
+                        start={this.state.routes[1].start}
+                        arrive={this.state.routes[1].arrive} />
                     </View>}
 
                     {this.state.routes.length > 2 && <View>
                         <NewRoute updateBikeRoute={this.updateBikeRoute} removeBikeRoute={this.removeBikeRoute} index={this.state.index2}
-                        saved={this.state.index2 == "2existing"} />
+                        saved={this.state.index2 == "2existing"}
+                        days={this.state.routes[2].days}
+                        start={this.state.routes[2].start}
+                        arrive={this.state.routes[2].arrive} />
                     </View>}
 
                     {this.state.routes.length > 3 && <View>
                         <NewRoute updateBikeRoute={this.updateBikeRoute} removeBikeRoute={this.removeBikeRoute} index={this.state.index3}
-                        saved={this.state.index3 == "3existing"} />
+                        saved={this.state.index3 == "3existing"}
+                        days={this.state.routes[3].days}
+                        start={this.state.routes[3].start}
+                        arrive={this.state.routes[3].arrive} />
                     </View>}
 
                     <Text style={{color: 'white', fontSize: 20, flex: 1}}>Spacing</Text>
