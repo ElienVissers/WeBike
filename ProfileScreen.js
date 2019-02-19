@@ -5,6 +5,7 @@ import { createStackNavigator, createAppContainer } from "react-navigation";
 
 import {AddButton} from './AddButton';
 import {NewRoute} from './NewRoute';
+import {NotificationSwitch} from './NotificationSwitch';
 
 
 export class ProfileScreen extends React.Component {
@@ -15,12 +16,16 @@ export class ProfileScreen extends React.Component {
             index0: 0,
             index1: 1,
             index2: 2,
-            index3: 3
+            index3: 3,
+            notify1hAdvance: false, //or get from redux
+            notifyAtStart: false //or get from redux
         };
         this.onPress = this.onPress.bind(this);
         this.addRoute = this.addRoute.bind(this);
         this.updateBikeRoute = this.updateBikeRoute.bind(this);
         this.removeBikeRoute = this.removeBikeRoute.bind(this);
+        this.toggleSwitch = this.toggleSwitch.bind(this);
+        this.toggleSwitch2 = this.toggleSwitch2.bind(this);
     }
     static navigationOptions = ({ navigation }) => {
         return {
@@ -53,16 +58,25 @@ export class ProfileScreen extends React.Component {
             });
         }
     }
+    toggleSwitch(value) {
+        this.setState({
+            notify1hAdvance: value
+        }, console.log('this.state.notify1hAdvance: ', this.state.notify1hAdvance));
+    }
+    toggleSwitch2(value) {
+        this.setState({
+            notifyAtStart: value
+        }, console.log('this.state.notify1hAdvance: ', this.state.notifyAtStart));
+    }
     onPress() {
         console.log("local state (this.state.routes): ", this.state.routes);
-        // save all the data from local state to redux
+        // save all the data from local state to redux OR to app?
         // put in a check that the city is real?
         this.props.navigation.navigate('CurrentWeatherRoute', {
             name: this.state.name,
             city: this.state.city
         });
     }
-
     addRoute() {
         console.log("route added");
         this.setState(prevState => ({
@@ -97,7 +111,6 @@ export class ProfileScreen extends React.Component {
             }));
         }
     }
-
     removeBikeRoute(route_index) {
         console.log("this.state.routes in removeBikeRoute:", this.state.routes);
         console.log("route_index in removeBikeRoute:", route_index);
@@ -126,17 +139,16 @@ export class ProfileScreen extends React.Component {
                         }
                     }
                 )
-            }));
+            }), () => console.log("this.state.routes (new):", this.state.routes));
         }
     }
-
     render() {
         const name = this.props.navigation.getParam('name', 'cyclist');
         const city = this.props.navigation.getParam('city', 'hometown');
         return (
             <ScrollView contentContainerStyle={styles.container}>
                 <ScrollView style={styles.mainContent} showsVerticalScrollIndicator={false}>
-                    <View style={{marginTop: 50, marginBottom: 50}}>
+                    <View style={{marginTop: 50, marginBottom: 20, flexDirection: 'row'}}>
                         <View style={styles.inputContainer}>
                             <TextInput style={styles.input}
                                 defaultValue={name}
@@ -146,6 +158,7 @@ export class ProfileScreen extends React.Component {
                                 })}
                             />
                         </View>
+                        <Text style={{flex: 1, marginTop: 11, marginLeft: 10}}> from </Text>
                         <View style={styles.inputContainer}>
                             <TextInput style={styles.input}
                                 defaultValue={city}
@@ -156,6 +169,19 @@ export class ProfileScreen extends React.Component {
                             />
                         </View>
                     </View>
+
+                    <NotificationSwitch
+                        toggleSwitch = {this.toggleSwitch}
+                        notify = {this.state.notify1hAdvance}
+                        text = "notify me 1 hour before"
+                    />
+
+                    <NotificationSwitch
+                        toggleSwitch = {this.toggleSwitch2}
+                        notify = {this.state.notifyAtStart}
+                        text = "notify me when I start"
+                    />
+
                     <Text style={styles.title}>Weekly cycling routes:</Text>
 
                     {this.state.routes.length > 0 && <View>
@@ -209,15 +235,16 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 25,
         textAlign: 'center',
-        marginBottom: 15
+        marginBottom: 15,
+        marginTop: 20
     },
     inputContainer: {
         borderBottomWidth: 1,
-        borderBottomColor: 'gold'
+        borderBottomColor: 'gold',
+        flex: 2
     },
     input: {
         textAlign: 'center',
-        height: 40,
         color: 'black'
     },
     button: {

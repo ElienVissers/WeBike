@@ -42,6 +42,9 @@ export class NewRoute extends React.Component {
         });
     }
     removeRoute() {
+        this.setState({
+            saved: true
+        });
         this.props.removeBikeRoute(this.props.index);
     }
     render() {
