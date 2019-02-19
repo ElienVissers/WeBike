@@ -33,7 +33,6 @@ export class ProfileScreen extends React.Component {
         AsyncStorage.getItem('userProfile').then(profileString => {
             if (profileString) {
                 var profile = JSON.parse(profileString);
-                console.log("profile in ProfileScreen (componentDidMount): ", profile);
                 this.setState({
                     name: profile["name"] || 'cyclist',
                     city: profile["city"] || 'city',
@@ -54,11 +53,10 @@ export class ProfileScreen extends React.Component {
                 });
             }
         }).then(() => {
-            console.log("this.state.routes in ProfileScreen (componentDidMount): ", this.state.routes);
             if (this.state.routes[0]) {
                 this.setState({
                     index0: "0existing"
-                }, () => console.log("this.state in ProfileScreen (componentDidMount): ", this.state));
+                });
             }
             if (this.state.routes[1]) {
                 this.setState({
@@ -90,8 +88,6 @@ export class ProfileScreen extends React.Component {
         });
     }
     onPress() {
-        console.log("local state (this.state): ", this.state);
-        // put in a check that the city is real?
         var userProfileString = JSON.stringify({
             name: this.state.name,
             city: this.state.city,
@@ -106,7 +102,6 @@ export class ProfileScreen extends React.Component {
         });
     }
     addRoute() {
-        console.log("route added");
         this.setState(prevState => ({
             routes: [...prevState.routes, "tempRoute"]
         }));

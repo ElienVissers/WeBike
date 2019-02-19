@@ -50,20 +50,15 @@ export default class App extends React.Component {
         };
     }
     componentDidMount() {
-        var isNewUser;
         AsyncStorage.getItem('userProfile').then(profileString => {
             if (profileString) {
                 var profile = JSON.parse(profileString);
-                console.log("profile in App: ", profile);
                 this.setState({
                     name: profile["name"] || 'cyclist',
                     city: profile["city"] || 'city',
                     notify1hAdvance: profile["notify1hAdvance"] || false,
                     notifyAtStart: profile["notifyAtStart"] || false,
                     routes: profile["routes"] || []
-                }, () => {
-                    isNewUser = false;
-                    console.log("isNewUser: ", isNewUser);
                 });
             }
             else {
