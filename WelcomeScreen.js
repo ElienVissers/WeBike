@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Image, TextInput, StyleSheet, Alert } from "react-native";
+import { View, Text, Image, TextInput, StyleSheet, Alert, AsyncStorage } from "react-native";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Button } from 'react-native-elements';
 import { createStackNavigator, createAppContainer } from "react-navigation";
@@ -19,9 +19,14 @@ export class WelcomeScreen extends React.Component {
     };
     onPress() {
         if (this.state.name && this.state.city) {
-            this.props.navigation.navigate('ProfileRoute', {
+            var firstProfileString = JSON.stringify({
                 name: this.state.name,
                 city: this.state.city
+            });
+            AsyncStorage.setItem('firstProfile', firstProfileString).then(() => {
+                this.props.navigation.navigate('ProfileRoute');
+            }).catch(err => {
+                console.log("err while saving name and city in WelcomeScreen: ", err);
             });
         } else {
             Alert.alert(

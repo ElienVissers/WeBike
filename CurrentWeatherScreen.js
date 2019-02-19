@@ -28,13 +28,7 @@ export class CurrentWeatherScreen extends React.Component {
         this.props.navigation.setParams({ editProfile: this.onPress });
     }
     onPress() {
-        if (this.state.typedName) {
-            this.props.navigation.navigate('ProfileRoute', {
-                name: this.state.text
-            });
-        } else {
-            this.props.navigation.navigate('ProfileRoute');
-        }
+        this.props.navigation.navigate('ProfileRoute');
     }
     render() {
         return (

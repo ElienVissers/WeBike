@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Image, TextInput, TouchableWithoutFeedback, StyleSheet, ScrollView } from "react-native";
+import { View, Text, Image, TextInput, TouchableWithoutFeedback, StyleSheet, ScrollView, AsyncStorage } from "react-native";
 import { Button } from 'react-native-elements';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
@@ -12,13 +12,10 @@ export class ProfileScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            routes: [], //or get the routes from redux
             index0: 0,
             index1: 1,
             index2: 2,
-            index3: 3,
-            notify1hAdvance: false, //or get from redux
-            notifyAtStart: false //or get from redux
+            index3: 3
         };
         this.onPress = this.onPress.bind(this);
         this.addRoute = this.addRoute.bind(this);
@@ -29,52 +26,83 @@ export class ProfileScreen extends React.Component {
     }
     static navigationOptions = ({ navigation }) => {
         return {
-            title: 'Edit your profile, ' + navigation.getParam('name', 'cyclist')
+            title: 'Edit your profile, ' + navigation.getParam('name', 'cyclist') || this.state.name
         };
     };
-    componentDidMount() {
-        this.setState({
-            name: this.props.name,
-            city: this.props.city
-        });
-        if (this.state.routes[0]) {
-            this.setState({
-                index0: "0existing"
-            });
-        }
-        if (this.state.routes[1]) {
-            this.setState({
-                index1: "1existing"
-            });
-        }
-        if (this.state.routes[2]) {
-            this.setState({
-                index2: "2existing"
-            });
-        }
-        if (this.state.routes[3]) {
-            this.setState({
-                index3: "3existing"
-            });
-        }
+    componentWillMount() {
+        AsyncStorage.getItem('userProfile').then(profileString => {
+            if (profileString) {
+                var profile = JSON.parse(profileString);
+                console.log("profile in ProfileScreen (componentDidMount): ", profile);
+                this.setState({
+                    name: profile["name"] || 'cyclist',
+                    city: profile["city"] || 'city',
+                    notify1hAdvance: profile["notify1hAdvance"] || false,
+                    notifyAtStart: profile["notifyAtStart"] || false,
+                    routes: profile["routes"] || []
+                });
+            } else {
+                AsyncStorage.getItem('firstProfile').then(firstProfileString => {
+                    var firstProfile = JSON.parse(firstProfileString);
+                    this.setState({
+                        name: firstProfile.name,
+                        city: firstProfile.city,
+                        notify1hAdvance: false,
+                        notifyAtStart: false,
+                        routes: []
+                    });
+                });
+            }
+        }).then(() => {
+            console.log("this.state.routes in ProfileScreen (componentDidMount): ", this.state.routes);
+            if (this.state.routes[0]) {
+                this.setState({
+                    index0: "0existing"
+                }, () => console.log("this.state in ProfileScreen (componentDidMount): ", this.state));
+            }
+            if (this.state.routes[1]) {
+                this.setState({
+                    index1: "1existing"
+                });
+            }
+            if (this.state.routes[2]) {
+                this.setState({
+                    index2: "2existing"
+                });
+            }
+            if (this.state.routes[3]) {
+                this.setState({
+                    index3: "3existing"
+                });
+            }
+        }).catch(err => {
+            console.log("err loading profileInfo: ", err);
+        })
     }
     toggleSwitch(value) {
         this.setState({
             notify1hAdvance: value
-        }, console.log('this.state.notify1hAdvance: ', this.state.notify1hAdvance));
+        });
     }
     toggleSwitch2(value) {
         this.setState({
             notifyAtStart: value
-        }, console.log('this.state.notify1hAdvance: ', this.state.notifyAtStart));
+        });
     }
     onPress() {
-        console.log("local state (this.state.routes): ", this.state.routes);
-        // save all the data from local state to redux OR to app?
+        console.log("local state (this.state): ", this.state);
         // put in a check that the city is real?
-        this.props.navigation.navigate('CurrentWeatherRoute', {
+        var userProfileString = JSON.stringify({
             name: this.state.name,
-            city: this.state.city
+            city: this.state.city,
+            notify1hAdvance: this.state.notify1hAdvance,
+            notifyAtStart: this.state.notifyAtStart,
+            routes: this.state.routes
+        });
+        AsyncStorage.setItem('userProfile', userProfileString).then(() => {
+            this.props.navigation.navigate('CurrentWeatherRoute');
+        }).catch(err => {
+            console.log("err while saving profile: ", err);
         });
     }
     addRoute() {
@@ -143,16 +171,17 @@ export class ProfileScreen extends React.Component {
         }
     }
     render() {
-        const name = this.props.navigation.getParam('name', 'cyclist');
-        const city = this.props.navigation.getParam('city', 'hometown');
+        if (!this.state.routes) {
+            return null;
+        }
         return (
             <ScrollView contentContainerStyle={styles.container}>
                 <ScrollView style={styles.mainContent} showsVerticalScrollIndicator={false}>
                     <View style={{marginTop: 50, marginBottom: 20, flexDirection: 'row'}}>
                         <View style={styles.inputContainer}>
                             <TextInput style={styles.input}
-                                defaultValue={name}
                                 placeholder="name"
+                                defaultValue={this.state.name}
                                 onChangeText={text => this.setState({
                                     name: text
                                 })}
@@ -161,8 +190,8 @@ export class ProfileScreen extends React.Component {
                         <Text style={{flex: 1, marginTop: 11, marginLeft: 10}}> from </Text>
                         <View style={styles.inputContainer}>
                             <TextInput style={styles.input}
-                                defaultValue={city}
                                 placeholder="city"
+                                defaultValue={this.state.city}
                                 onChangeText={text => this.setState({
                                     city: text
                                 })}
@@ -185,19 +214,23 @@ export class ProfileScreen extends React.Component {
                     <Text style={styles.title}>Weekly cycling routes:</Text>
 
                     {this.state.routes.length > 0 && <View>
-                        <NewRoute updateBikeRoute={this.updateBikeRoute} removeBikeRoute={this.removeBikeRoute} index={this.state.index0} />
+                        <NewRoute updateBikeRoute={this.updateBikeRoute} removeBikeRoute={this.removeBikeRoute} index={this.state.index0}
+                        saved={this.state.index0 == "0existing"} />
                     </View>}
 
                     {this.state.routes.length > 1 && <View>
-                        <NewRoute updateBikeRoute={this.updateBikeRoute} removeBikeRoute={this.removeBikeRoute} index={this.state.index1} />
+                        <NewRoute updateBikeRoute={this.updateBikeRoute} removeBikeRoute={this.removeBikeRoute} index={this.state.index1}
+                        saved={this.state.index1 == "1existing"} />
                     </View>}
 
                     {this.state.routes.length > 2 && <View>
-                        <NewRoute updateBikeRoute={this.updateBikeRoute} removeBikeRoute={this.removeBikeRoute} index={this.state.index2} />
+                        <NewRoute updateBikeRoute={this.updateBikeRoute} removeBikeRoute={this.removeBikeRoute} index={this.state.index2}
+                        saved={this.state.index2 == "2existing"} />
                     </View>}
 
                     {this.state.routes.length > 3 && <View>
-                        <NewRoute updateBikeRoute={this.updateBikeRoute} removeBikeRoute={this.removeBikeRoute} index={this.state.index3} />
+                        <NewRoute updateBikeRoute={this.updateBikeRoute} removeBikeRoute={this.removeBikeRoute} index={this.state.index3}
+                        saved={this.state.index3 == "3existing"} />
                     </View>}
 
                     <Text style={{color: 'white', fontSize: 20, flex: 1}}>Spacing</Text>

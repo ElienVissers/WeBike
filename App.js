@@ -1,12 +1,12 @@
 import React from "react";
-import { View, Text, Button, Image, TextInput, TouchableWithoutFeedback } from "react-native";
+import { View, Text, Button, Image, TextInput, TouchableWithoutFeedback, AsyncStorage } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
 import {WelcomeScreen} from './WelcomeScreen';
 import {ProfileScreen} from './ProfileScreen';
 import {CurrentWeatherScreen} from './CurrentWeatherScreen';
 
-let isNewUser = true;
+
 
 const AppNavigator = createStackNavigator(
     {
@@ -33,22 +33,29 @@ const AppContainer = createAppContainer(AppNavigator);
 export default class App extends React.Component {
     constructor() {
         super();
-        this.state = {};
+        this.state = {
+        };
     }
-    // componentDidMount() {
-    //     axios.get('/user').then(results => {
-    //         this.setState({
-    //             first: results.data.rows[0].first,
-    //             last: results.data.rows[0].last,
-    //             pictureUrl: results.data.rows[0].url,
-    //             bio: results.data.rows[0].bio,
-    //             color: results.data.rows[0].color,
-    //             shape: results.data.rows[0].shape
-    //         });
-    //     }).catch(err => {
-    //         console.log('error in mount app: ', err);
-    //     });
-    // }
+    componentDidMount() {
+        AsyncStorage.getItem('userProfile').then(profileString => {
+            if (profileString) {
+                var profile = JSON.parse(profileString);
+                console.log("profile in App: ", profile);
+                this.setState({
+                    name: profile["name"] || 'cyclist',
+                    city: profile["city"] || 'city',
+                    notify1hAdvance: profile["notify1hAdvance"] || false,
+                    notifyAtStart: profile["notifyAtStart"] || false,
+                    routes: profile["routes"] || []
+                }, () => {
+                    isNewUser = false;
+                    console.log("isNewUser: ", isNewUser);
+                });
+            }
+        }).catch(err => {
+            console.log("err loading app: ", err);
+        })
+    }
     render() {
         return <AppContainer />;
     }
