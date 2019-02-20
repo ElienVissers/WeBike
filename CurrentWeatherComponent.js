@@ -1,6 +1,9 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 
+import {API_key} from './secrets';
+import data from './filteredCities';
+
 import {FadeInImage} from './FadeInImage';
 import axios from 'axios';
 
@@ -8,34 +11,35 @@ export class CurrentWeatherComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
+        this.getCityId = this.getCityId.bind(this);
     }
     componentDidMount() {
         console.log('CurrentWeatherComponent mounted');
-        // console.log(this.props.city);
+        console.log('this.props.city: ', this.props.city);
+
+        var city = this.props.city.charAt(0).toUpperCase() + this.props.city.slice(1);
+
+        console.log('city: ', city);
+        var city_id = this.getCityId(city);
+
+        console.log('city_id: ', city_id);
+
         var self = this;
-        axios.get(`https://api.openweathermap.org/data/2.5/weather?id=2950159&APPID=e18ffb68e1205393de8354e0e703f05b`).then(results => {
+
+        axios.get(`https://api.openweathermap.org/data/2.5/weather?id=${city_id}&APPID=${API_key}`).then(results => {
             self.setState({test: "results from OWM!!!!"});
             self.setState({results: results.data.weather[0].description});
         }).catch(err => {
             console.log('err getting weather results: ', err);
         });
-
-            // console.log("gonna make axios request for city id now!!");
-            // axios.get(`http://192.168.50.197:8080/${this.state.city}/id`).then(cityid => {
-            //     // console.log(cityid);
-            //     axios.get(`http://192.168.50.197:8080/${cityid}/currentweather`).then(data => {
-            //         // console.log("data from server: ", data);
-            //         this.setState({test: "results from OWM!!!!"});
-            //         this.setState({results: data.visibility});
-            //     }).catch(err => {
-            //         console.log(err => 'error getting weather info: ', err);
-            //         this.setState({error: "error getting weather info :("})
-            //     });
-            // }).catch(err => {
-            //     console.log('error getting cityid: ', err);
-            //     this.setState({test: "no weather info for your city :("});
-            //     //setState so that a custom message appears: "no weather info for your city"
-            // });
+    }
+    getCityId(city) {
+        var cities = JSON.parse(data)
+        for (var i = 0; i < cities.length; i++) {
+            if (cities[i].name == city) {
+                return data[i].id
+            }
+        }
     }
     render() {
         if (!this.state) {
