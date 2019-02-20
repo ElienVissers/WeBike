@@ -20,6 +20,7 @@ export class CurrentWeatherScreen extends React.Component {
         this.clear = this.clear.bind(this);
         this.toggleSwitch = this.toggleSwitch.bind(this);
         this.onWillFocus = this.onWillFocus.bind(this);
+        this.getStartDay = this.getStartDay.bind(this);
     }
     static navigationOptions = ({navigation}) => {
         return {
@@ -60,11 +61,36 @@ export class CurrentWeatherScreen extends React.Component {
                 });
             }
         }).then(() => {
-            //////////////////////////////////////////////////////////////////// TO DO: calculate the next start of trip//////////////////////////////////
-            this.setState({
-                startDay: "monday",
-                startTime: "8"
-            })
+            //////////////////////////////////////////////////////////////////// TO DO: calculate the next start of trip////////////////////////////////////////////////////
+            if (this.state.routes.length > 0) {
+                var now = new Date();
+                var startDay;
+                var startTime;
+                console.log("current date: ", now);
+                console.log("routes: ", this.state.routes);
+                if (this.state.routes[0]) {
+                    startDay0 = this.getStartDay(now, this.state.routes[0]);
+                    startTime0 = this.state.routes[0].start.split("-")[0];
+                }
+                if (this.state.routes[1]) {
+                    startDay1 = this.getStartDay(now, this.state.routes[1]);
+                    startTime1 = this.state.routes[1].start.split("-")[0];
+                }
+                if (this.state.routes[2]) {
+                    startDay2 = this.getStartDay(now, this.state.routes[2]);
+                    startTime2 = this.state.routes[2].start.split("-")[0];
+                }
+                if (this.state.routes[3]) {
+                    startDay3 = this.getStartDay(now, this.state.routes[3]);
+                    startTime3 = this.state.routes[3].start.split("-")[0];
+                }
+                // decide which startDayx and startTimex comes first (in comparison to now) --> startDay and startTime
+                this.setState({
+                    startDay: startDay,
+                    startTime: startTime
+                })
+            }
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// end of calculation ///////////////////
         }).catch(err => {
             console.log("err while mounting CurrentWeatherScreen: ", err);
         });
@@ -77,7 +103,6 @@ export class CurrentWeatherScreen extends React.Component {
         console.log('willFocus CurrentWeatherScreen');
         AsyncStorage.getItem('userProfile').then(profileString => {
             if (profileString) {
-                console.log('running if block');
                 var profile = JSON.parse(profileString);
                 return self.setState({
                     name: profile["name"] || 'cyclist',
@@ -85,13 +110,66 @@ export class CurrentWeatherScreen extends React.Component {
                     notify1hAdvance: profile["notify1hAdvance"] || null,
                     notifyAtStart: profile["notifyAtStart"] || null,
                     routes: profile["routes"] || []
-                }, () => console.log("this.state after setState in WillFocus: ", self.state));
+                });
             }
+        }).then(() => {
+            //////////////////////////////////////////////////////////////////// TO DO: calculate the next start of trip//////////////////////////////////
         }).catch(err => {
             console.log('err during willFocus CurrentWeatherScreen: ', err);
-            console.log('this.state in catch WillFocus: ', self.state);
         })
-    };
+    }
+    getStartDay(now, route) {
+        var routeStartTime = Number(route.start.split("-")[0]);
+        var nowTime = now.getHours();
+        if (now.getDay() == 5) {
+            if (route.days == "weekend") {
+                startDay = "Sat";
+            } else if (route.days == "weekdays") {
+                if (nowTime > routeStartTime) {
+                    startDay = "Mon";
+                } else {
+                    startDay = "Fri";
+                }
+            }
+        } else if (now.getDay() == 0) {
+            if (route.days == "weekdays") {
+                startDay = "Mon";
+            } else if (route.days == "weekend") {
+                if (nowTime > routeStartTime) {
+                    startDay = "Sat";
+                } else {
+                    startDay = "Sun";
+                }
+            }
+        } else if (now.getDay() == 1 || now.getDay() == 2 || now.getDay() == 3 || now.getDay() == 4) {
+            if (route.days == "weekdays") {
+                if (nowTime > routeStartTime) {
+                    if (now.getDay() == 1) {startDay = "Tue"}
+                    if (now.getDay() == 2) {startDay = "Wed"}
+                    if (now.getDay() == 3) {startDay = "Thu"}
+                    if (now.getDay() == 4) {startDay = "Fri"}
+                } else {
+                    if (now.getDay() == 1) {startDay = "Mon"}
+                    if (now.getDay() == 2) {startDay = "Tue"}
+                    if (now.getDay() == 3) {startDay = "Wed"}
+                    if (now.getDay() == 4) {startDay = "Thu"}
+                }
+            } else if (route.days == "weekend") {
+                startDay = "Sat";
+            }
+        } else if (now.getDay() == 6) {
+            if (route.days == "weekdays") {
+                startDay = "Mon";
+            } else if (route.days == "weekend") {
+                if (nowTime > routeStartTime) {
+                    startDay = "Sun";
+                } else {
+                    startDay = "Sat"
+                }
+            }
+        }
+        return startDay;
+    }
     onPress() {
         this.props.navigation.navigate('ProfileRoute');
     }
@@ -107,21 +185,22 @@ export class CurrentWeatherScreen extends React.Component {
         if (!this.state) {
             return null;
         }
-        console.log("this.state: ", this.state);
+        // console.log("this.state CurrentWeatherScreen: ", this.state);
         return (
-          <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "white" }}>
-            {!this.state.futureWeather && <CurrentWeatherComponent city={this.state.city}/>}
-            {this.state.futureWeather && this.state.routes && <FutureWeatherComponent city={this.state.city} startDay={this.state.startDay} startTime={this.state.startTime} />}
-
-            {this.state.routes && this.state.routes.length > 0 && <WeatherSwitch
-                toggleSwitch = {this.toggleSwitch}
-                futureWeather = {this.state.futureWeather}
-            />}
-
-            <Button onPress={this.clear}
-                title="Clear Async Storage"
-            />
-          </View>
+            <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "white" }}>
+                <View style={{flex: 3}}>
+                    {!this.state.futureWeather && <CurrentWeatherComponent city={this.state.city}/>}
+                    {this.state.futureWeather && this.state.routes && <FutureWeatherComponent city={this.state.city} startDay={this.state.startDay} startTime={this.state.startTime} />}
+                </View>
+                <View style={{flex:1}}>
+                    {this.state.routes && this.state.routes.length > 0 && <WeatherSwitch
+                        toggleSwitch = {this.toggleSwitch}
+                        futureWeather = {this.state.futureWeather}
+                    />}
+                </View>
+            </View>
         );
     }
 }
+
+// reset AsyncStorage --> <Button onPress={this.clear} title="Clear Async Storage" />

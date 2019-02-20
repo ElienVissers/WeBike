@@ -11,11 +11,11 @@ export class CurrentWeatherComponent extends React.Component {
     }
     componentDidMount() {
         console.log('CurrentWeatherComponent mounted');
-        console.log(this.props.city);
+        // console.log(this.props.city);
+        var self = this;
         axios.get(`https://api.openweathermap.org/data/2.5/weather?id=2950159&APPID=e18ffb68e1205393de8354e0e703f05b`).then(results => {
-            // console.log("results from openweathermap: ", results.data);
-            this.setState({test: "results from OWM!!!!"});
-            this.setState({results: results.data.weather[0].description});
+            self.setState({test: "results from OWM!!!!"});
+            self.setState({results: results.data.weather[0].description});
         }).catch(err => {
             console.log('err getting weather results: ', err);
         });

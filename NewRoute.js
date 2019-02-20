@@ -16,9 +16,6 @@ export class NewRoute extends React.Component {
         this.editRoute = this.editRoute.bind(this);
         this.removeRoute = this.removeRoute.bind(this);
     }
-    componentDidMount() {
-        console.log("this.props in NewRoute: ", this.props);
-    }
     componentDidUpdate(prevProps) {
         if (prevProps.saved !== this.props.saved) {
             this.setState({

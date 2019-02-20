@@ -11,7 +11,7 @@ export class FutureWeatherComponent extends React.Component {
     }
     componentDidMount() {
         console.log('FutureWeatherComponent mounted');
-        console.log(this.props.city, this.props.startDay, this.props.startTime);
+        // console.log(this.props.city, this.props.startDay, this.props.startTime);
         axios.get(`https://api.openweathermap.org/data/2.5/weather?id=2950159&APPID=e18ffb68e1205393de8354e0e703f05b`).then(results => {
             // console.log("results from openweathermap: ", results.data);
             this.setState({test: "results from OWM!!!!"});
@@ -46,6 +46,7 @@ export class FutureWeatherComponent extends React.Component {
                 <FadeInImage source={require('./assets/bike.png')} style={{flex:1, height: 150, width: 150}} />
 
                 <Text>Future Weather Component</Text>
+                <Text>Next Trip: {this.props.startDay} at {this.props.startTime}h.</Text>
 
                 {this.state.test && <Text>{this.state.test}</Text>}
                 {this.state.results && <Text style={{fontSize: 40}}>{this.state.results}</Text>}

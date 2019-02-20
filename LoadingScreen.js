@@ -7,8 +7,7 @@ export class LoadingScreen extends React.Component {
         this.state = {};
         this.LoadExistingUserInfo();
     }
-
-
+    
     LoadExistingUserInfo = async () => {
         const firstProfile = await AsyncStorage.getItem('firstProfile');
         this.props.navigation.navigate(firstProfile ? 'App' : 'Register');
