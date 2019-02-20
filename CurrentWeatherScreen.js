@@ -61,7 +61,6 @@ export class CurrentWeatherScreen extends React.Component {
                 });
             }
         }).then(() => {
-            //////////////////////////////////////////////////////////////////// TO DO: calculate the next start of trip////////////////////////////////////////////////////
             if (this.state.routes.length > 0) {
                 var now = new Date();
                 var startDay;
@@ -69,28 +68,46 @@ export class CurrentWeatherScreen extends React.Component {
                 console.log("current date: ", now);
                 console.log("routes: ", this.state.routes);
                 if (this.state.routes[0]) {
-                    startDay0 = this.getStartDay(now, this.state.routes[0]);
-                    startTime0 = this.state.routes[0].start.split("-")[0];
+                    startDate0 = this.getStartDay(now, this.state.routes[0]);
+                    var delta0 = startDate0 - now;
                 }
                 if (this.state.routes[1]) {
-                    startDay1 = this.getStartDay(now, this.state.routes[1]);
-                    startTime1 = this.state.routes[1].start.split("-")[0];
+                    startDate1 = this.getStartDay(now, this.state.routes[1]);
+                    var delta1 = startDate1 - now;
                 }
                 if (this.state.routes[2]) {
-                    startDay2 = this.getStartDay(now, this.state.routes[2]);
-                    startTime2 = this.state.routes[2].start.split("-")[0];
+                    startDate2 = this.getStartDay(now, this.state.routes[2]);
+                    var delta2 = startDate2 - now;
                 }
                 if (this.state.routes[3]) {
-                    startDay3 = this.getStartDay(now, this.state.routes[3]);
-                    startTime3 = this.state.routes[3].start.split("-")[0];
+                    startDate3 = this.getStartDay(now, this.state.routes[3]);
+                    var delta3 = startDate3 - now;
                 }
-                // decide which startDayx and startTimex comes first (in comparison to now) --> startDay and startTime
-                this.setState({
-                    startDay: startDay,
-                    startTime: startTime
-                })
+                // decide which startDate comes first (in comparison to now) --> startDay and startTime
+                var weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                var delta = Math.min(delta0, delta1, delta2, delta3);
+                if (delta == delta0) {
+                    this.setState({
+                        startDay: weekday[startDate0.getDay()],
+                        startTime: startDate0.getHours()
+                    });
+                } else if (delta == delta1) {
+                    this.setState({
+                        startDay: weekday[startDate1.getDay()],
+                        startTime: startDate1.getHours()
+                    });
+                } else if (delta == delta2) {
+                    this.setState({
+                        startDay: weekday[startDate2.getDay()],
+                        startTime: startDate2.getHours()
+                    });
+                } else if (delta == delta3) {
+                    this.setState({
+                        startDay: weekday[startDate3.getDay()],
+                        startTime: startDate3.getHours()
+                    });
+                }
             }
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// end of calculation ///////////////////
         }).catch(err => {
             console.log("err while mounting CurrentWeatherScreen: ", err);
         });
@@ -113,7 +130,53 @@ export class CurrentWeatherScreen extends React.Component {
                 });
             }
         }).then(() => {
-            //////////////////////////////////////////////////////////////////// TO DO: calculate the next start of trip//////////////////////////////////
+            if (this.state.routes.length > 0) {
+                var now = new Date();
+                var startDay;
+                var startTime;
+                console.log("current date: ", now);
+                console.log("routes: ", this.state.routes);
+                if (this.state.routes[0]) {
+                    startDate0 = this.getStartDay(now, this.state.routes[0]);
+                    var delta0 = startDate0 - now;
+                }
+                if (this.state.routes[1]) {
+                    startDate1 = this.getStartDay(now, this.state.routes[1]);
+                    var delta1 = startDate1 - now;
+                }
+                if (this.state.routes[2]) {
+                    startDate2 = this.getStartDay(now, this.state.routes[2]);
+                    var delta2 = startDate2 - now;
+                }
+                if (this.state.routes[3]) {
+                    startDate3 = this.getStartDay(now, this.state.routes[3]);
+                    var delta3 = startDate3 - now;
+                }
+                // decide which startDate comes first (in comparison to now) --> startDay and startTime
+                var weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                var delta = Math.min(delta0, delta1, delta2, delta3);
+                if (delta == delta0) {
+                    this.setState({
+                        startDay: weekday[startDate0.getDay()],
+                        startTime: startDate0.getHours()
+                    });
+                } else if (delta == delta1) {
+                    this.setState({
+                        startDay: weekday[startDate1.getDay()],
+                        startTime: startDate1.getHours()
+                    });
+                } else if (delta == delta2) {
+                    this.setState({
+                        startDay: weekday[startDate2.getDay()],
+                        startTime: startDate2.getHours()
+                    });
+                } else if (delta == delta3) {
+                    this.setState({
+                        startDay: weekday[startDate3.getDay()],
+                        startTime: startDate3.getHours()
+                    });
+                }
+            }
         }).catch(err => {
             console.log('err during willFocus CurrentWeatherScreen: ', err);
         })
@@ -123,52 +186,135 @@ export class CurrentWeatherScreen extends React.Component {
         var nowTime = now.getHours();
         if (now.getDay() == 5) {
             if (route.days == "weekend") {
-                startDay = "Sat";
+                // startDay = "Sat";
+                startDay = new Date();
+                startDay.setHours(0, 0, 0, 0);
+                startDay.setDate(startDay.getDate()+1);
             } else if (route.days == "weekdays") {
                 if (nowTime > routeStartTime) {
-                    startDay = "Mon";
+                    // startDay = "Mon";
+                    startDay = new Date();
+                    startDay.setHours(0, 0, 0, 0);
+                    startDay.setDate(startDay.getDate()+3);
                 } else {
-                    startDay = "Fri";
+                    // startDay = "Fri";
+                    startDay = new Date();
+                    startDay.setHours(0, 0, 0, 0);
                 }
             }
         } else if (now.getDay() == 0) {
             if (route.days == "weekdays") {
-                startDay = "Mon";
+                // startDay = "Mon";
+                startDay = new Date();
+                startDay.setHours(0, 0, 0, 0);
+                startDay.setDate(startDay.getDate()+1);
             } else if (route.days == "weekend") {
                 if (nowTime > routeStartTime) {
-                    startDay = "Sat";
+                    // startDay = "Sat";
+                    startDay = new Date();
+                    startDay.setHours(0, 0, 0, 0);
+                    startDay.setDate(startDay.getDate()+6);
                 } else {
-                    startDay = "Sun";
+                    // startDay = "Sun";
+                    startDay = new Date();
+                    startDay.setHours(0, 0, 0, 0);
                 }
             }
         } else if (now.getDay() == 1 || now.getDay() == 2 || now.getDay() == 3 || now.getDay() == 4) {
             if (route.days == "weekdays") {
                 if (nowTime > routeStartTime) {
-                    if (now.getDay() == 1) {startDay = "Tue"}
-                    if (now.getDay() == 2) {startDay = "Wed"}
-                    if (now.getDay() == 3) {startDay = "Thu"}
-                    if (now.getDay() == 4) {startDay = "Fri"}
+                    if (now.getDay() == 1) {
+                        // startDay = "Tue"
+                        startDay = new Date();
+                        startDay.setHours(0, 0, 0, 0);
+                        startDay.setDate(startDay.getDate()+1);
+                    }
+                    if (now.getDay() == 2) {
+                        // startDay = "Wed"
+                        startDay = new Date();
+                        startDay.setHours(0, 0, 0, 0);
+                        startDay.setDate(startDay.getDate()+1);
+                    }
+                    if (now.getDay() == 3) {
+                        // startDay = "Thu"
+                        startDay = new Date();
+                        startDay.setHours(0, 0, 0, 0);
+                        startDay.setDate(startDay.getDate()+1);
+                    }
+                    if (now.getDay() == 4) {
+                        // startDay = "Fri"
+                        startDay = new Date();
+                        startDay.setHours(0, 0, 0, 0);
+                        startDay.setDate(startDay.getDate()+1);
+                    }
                 } else {
-                    if (now.getDay() == 1) {startDay = "Mon"}
-                    if (now.getDay() == 2) {startDay = "Tue"}
-                    if (now.getDay() == 3) {startDay = "Wed"}
-                    if (now.getDay() == 4) {startDay = "Thu"}
+                    if (now.getDay() == 1) {
+                        // startDay = "Mon"
+                        startDay = new Date();
+                        startDay.setHours(0, 0, 0, 0);
+                    }
+                    if (now.getDay() == 2) {
+                        // startDay = "Tue"
+                        startDay = new Date();
+                        startDay.setHours(0, 0, 0, 0);
+                    }
+                    if (now.getDay() == 3) {
+                        // startDay = "Wed"
+                        startDay = new Date();
+                        startDay.setHours(0, 0, 0, 0);
+                    }
+                    if (now.getDay() == 4) {
+                        // startDay = "Thu"
+                        startDay = new Date();
+                        startDay.setHours(0, 0, 0, 0);
+                    }
                 }
             } else if (route.days == "weekend") {
-                startDay = "Sat";
+                // startDay = "Sat";
+                if (now.getDay() == 1) {
+                    startDay = new Date();
+                    startDay.setHours(0, 0, 0, 0);
+                    startDay.setDate(startDay.getDate()+5);
+                }
+                if (now.getDay() == 2) {
+                    startDay = new Date();
+                    startDay.setHours(0, 0, 0, 0);
+                    startDay.setDate(startDay.getDate()+4);
+                }
+                if (now.getDay() == 3) {
+                    startDay = new Date();
+                    startDay.setHours(0, 0, 0, 0);
+                    startDay.setDate(startDay.getDate()+3);
+                }
+                if (now.getDay() == 4) {
+                    startDay = new Date();
+                    startDay.setHours(0, 0, 0, 0);
+                    startDay.setDate(startDay.getDate()+2);
+                }
             }
         } else if (now.getDay() == 6) {
             if (route.days == "weekdays") {
-                startDay = "Mon";
+                // startDay = "Mon";
+                startDay = new Date();
+                startDay.setHours(0, 0, 0, 0);
+                startDay.setDate(startDay.getDate()+2);
             } else if (route.days == "weekend") {
                 if (nowTime > routeStartTime) {
-                    startDay = "Sun";
+                    // startDay = "Sun";
+                    startDay = new Date();
+                    startDay.setHours(0, 0, 0, 0);
+                    startDay.setDate(startDay.getDate()+1);
                 } else {
-                    startDay = "Sat"
+                    // startDay = "Sat"
+                    startDay = new Date();
+                    startDay.setHours(0, 0, 0, 0);
                 }
             }
         }
-        return startDay;
+        var startTime = Number(route.start.split("-")[0]);
+        var nextDate = startDay.setHours(startTime);
+
+        return nextDate;
     }
     onPress() {
         this.props.navigation.navigate('ProfileRoute');
