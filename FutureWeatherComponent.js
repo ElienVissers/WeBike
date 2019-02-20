@@ -11,7 +11,7 @@ export class FutureWeatherComponent extends React.Component {
     }
     componentDidMount() {
         console.log('FutureWeatherComponent mounted');
-        // console.log(this.props.city, this.props.startDay, this.props.startTime);
+        console.log(this.props.city, this.props.startDay, this.props.startTime, this.props.nextTrip);
         axios.get(`https://api.openweathermap.org/data/2.5/weather?id=2950159&APPID=e18ffb68e1205393de8354e0e703f05b`).then(results => {
             // console.log("results from openweathermap: ", results.data);
             this.setState({test: "results from OWM!!!!"});

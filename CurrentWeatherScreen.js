@@ -70,41 +70,58 @@ export class CurrentWeatherScreen extends React.Component {
                 if (this.state.routes[0]) {
                     startDate0 = this.getStartDay(now, this.state.routes[0]);
                     var delta0 = startDate0 - now;
+                    var startDate00 = new Date(startDate0);
                 }
                 if (this.state.routes[1]) {
                     startDate1 = this.getStartDay(now, this.state.routes[1]);
                     var delta1 = startDate1 - now;
+                    var startDate11 = new Date(startDate1);
                 }
                 if (this.state.routes[2]) {
                     startDate2 = this.getStartDay(now, this.state.routes[2]);
                     var delta2 = startDate2 - now;
+                    var startDate22 = new Date(startDate2);
                 }
                 if (this.state.routes[3]) {
                     startDate3 = this.getStartDay(now, this.state.routes[3]);
                     var delta3 = startDate3 - now;
+                    var startDate33 = new Date(startDate3);
                 }
                 // decide which startDate comes first (in comparison to now) --> startDay and startTime
                 var weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-                var delta = Math.min(delta0, delta1, delta2, delta3);
+                if (delta0 && delta1 && delta2 && delta3) {
+                    var delta = Math.min(delta0, delta1, delta2, delta3);
+                } else if (delta0 && delta1 && delta2) {
+                    var delta = Math.min(delta0, delta1, delta2);
+                } else if (delta0 && delta1) {
+                    var delta = Math.min(delta0, delta1);
+                } else if (delta0) {
+                    var delta = delta0
+                }
+                console.log("delta: ", delta);
                 if (delta == delta0) {
                     this.setState({
-                        startDay: weekday[startDate0.getDay()],
-                        startTime: startDate0.getHours()
+                        startDay: weekday[startDate00.getDay()],
+                        startTime: startDate00.getHours(),
+                        nextTrip: startDate00
                     });
                 } else if (delta == delta1) {
                     this.setState({
-                        startDay: weekday[startDate1.getDay()],
-                        startTime: startDate1.getHours()
+                        startDay: weekday[startDate11.getDay()],
+                        startTime: startDate11.getHours(),
+                        nextTrip: startDate11
                     });
                 } else if (delta == delta2) {
                     this.setState({
-                        startDay: weekday[startDate2.getDay()],
-                        startTime: startDate2.getHours()
+                        startDay: weekday[startDate22.getDay()],
+                        startTime: startDate22.getHours(),
+                        nextTrip: startDate22
                     });
                 } else if (delta == delta3) {
                     this.setState({
-                        startDay: weekday[startDate3.getDay()],
-                        startTime: startDate3.getHours()
+                        startDay: weekday[startDate33.getDay()],
+                        startTime: startDate33.getHours(),
+                        nextTrip: startDate33
                     });
                 }
             }
@@ -139,41 +156,60 @@ export class CurrentWeatherScreen extends React.Component {
                 if (this.state.routes[0]) {
                     startDate0 = this.getStartDay(now, this.state.routes[0]);
                     var delta0 = startDate0 - now;
+                    var startDate00 = new Date(startDate0);
+                    console.log("startDate00: ", startDate00);
+                    console.log("delta0: ", delta0);
                 }
                 if (this.state.routes[1]) {
                     startDate1 = this.getStartDay(now, this.state.routes[1]);
                     var delta1 = startDate1 - now;
+                    var startDate11 = new Date(startDate1);
                 }
                 if (this.state.routes[2]) {
                     startDate2 = this.getStartDay(now, this.state.routes[2]);
                     var delta2 = startDate2 - now;
+                    var startDate22 = new Date(startDate2);
                 }
                 if (this.state.routes[3]) {
                     startDate3 = this.getStartDay(now, this.state.routes[3]);
                     var delta3 = startDate3 - now;
+                    var startDate33 = new Date(startDate3);
                 }
                 // decide which startDate comes first (in comparison to now) --> startDay and startTime
                 var weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-                var delta = Math.min(delta0, delta1, delta2, delta3);
+                if (delta0 && delta1 && delta2 && delta3) {
+                    var delta = Math.min(delta0, delta1, delta2, delta3);
+                } else if (delta0 && delta1 && delta2) {
+                    var delta = Math.min(delta0, delta1, delta2);
+                } else if (delta0 && delta1) {
+                    var delta = Math.min(delta0, delta1);
+                } else if (delta0) {
+                    var delta = delta0
+                }
+                console.log("delta: ", delta);
                 if (delta == delta0) {
                     this.setState({
-                        startDay: weekday[startDate0.getDay()],
-                        startTime: startDate0.getHours()
+                        startDay: weekday[startDate00.getDay()],
+                        startTime: startDate00.getHours(),
+                        nextTrip: startDate00
                     });
                 } else if (delta == delta1) {
                     this.setState({
-                        startDay: weekday[startDate1.getDay()],
-                        startTime: startDate1.getHours()
+                        startDay: weekday[startDate11.getDay()],
+                        startTime: startDate11.getHours(),
+                        nextTrip: startDate11
                     });
                 } else if (delta == delta2) {
                     this.setState({
-                        startDay: weekday[startDate2.getDay()],
-                        startTime: startDate2.getHours()
+                        startDay: weekday[startDate22.getDay()],
+                        startTime: startDate22.getHours(),
+                        nextTrip: startDate22
                     });
                 } else if (delta == delta3) {
                     this.setState({
-                        startDay: weekday[startDate3.getDay()],
-                        startTime: startDate3.getHours()
+                        startDay: weekday[startDate33.getDay()],
+                        startTime: startDate33.getHours(),
+                        nextTrip: startDate33
                     });
                 }
             }
@@ -336,7 +372,7 @@ export class CurrentWeatherScreen extends React.Component {
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "white" }}>
                 <View style={{flex: 3}}>
                     {!this.state.futureWeather && <CurrentWeatherComponent city={this.state.city}/>}
-                    {this.state.futureWeather && this.state.routes && <FutureWeatherComponent city={this.state.city} startDay={this.state.startDay} startTime={this.state.startTime} />}
+                    {this.state.futureWeather && this.state.routes && <FutureWeatherComponent city={this.state.city} startDay={this.state.startDay} startTime={this.state.startTime} nextTrip={this.state.nextTrip} />}
                 </View>
                 <View style={{flex:1}}>
                     {this.state.routes && this.state.routes.length > 0 && <WeatherSwitch
