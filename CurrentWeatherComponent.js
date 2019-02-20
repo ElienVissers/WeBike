@@ -1,8 +1,7 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, AsyncStorage } from 'react-native';
 
 import {API_key} from './secrets';
-import data from './filteredCities';
 
 import {FadeInImage} from './FadeInImage';
 import axios from 'axios';
@@ -11,35 +10,46 @@ export class CurrentWeatherComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
-        this.getCityId = this.getCityId.bind(this);
     }
     componentDidMount() {
         console.log('CurrentWeatherComponent mounted');
         console.log('this.props.city: ', this.props.city);
-
-        var city = this.props.city.charAt(0).toUpperCase() + this.props.city.slice(1);
-
-        console.log('city: ', city);
-        var city_id = this.getCityId(city);
-
-        console.log('city_id: ', city_id);
-
         var self = this;
-
-        axios.get(`https://api.openweathermap.org/data/2.5/weather?id=${city_id}&APPID=${API_key}`).then(results => {
-            self.setState({test: "results from OWM!!!!"});
-            self.setState({results: results.data.weather[0].description});
-        }).catch(err => {
-            console.log('err getting weather results: ', err);
-        });
-    }
-    getCityId(city) {
-        var cities = JSON.parse(data)
-        for (var i = 0; i < cities.length; i++) {
-            if (cities[i].name == city) {
-                return data[i].id
-            }
+        if (!this.props.city) {
+            AsyncStorage.getItem('userProfile').then(profileString => {
+                if (profileString) {
+                    var profile = JSON.parse(profileString);
+                    return this.setState({
+                        city: profile["city"]
+                    });
+                } else {
+                    AsyncStorage.getItem('firstProfile').then(firstProfileString => {
+                        var firstProfile = JSON.parse(firstProfileString);
+                        return this.setState({
+                            city: firstProfile.city
+                        });
+                    });
+                }
+            }).then(() => {
+                console.log("self.state.city: ", self.state.city);
+                axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${self.state.city}&APPID=${API_key}`).then(results => {
+                    self.setState({test: "results from OWM!!!"});
+                    self.setState({results: results.data.weather[0].description});
+                }).catch(err => {
+                    console.log('err getting weather results: ', err);
+                });
+            }).catch(err => {
+                console.log('error while mounting CurrentWeatherComponent', err);
+            });
+        } else {
+            axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${self.props.city}&APPID=${API_key}`).then(results => {
+                self.setState({test: "results from OWM!!!!"});
+                self.setState({results: results.data.weather[0].description});
+            }).catch(err => {
+                console.log('err getting weather results: ', err);
+            });
         }
+        //api.openweathermap.org/data/2.5/weather?q=${this.props.city}&APPID=${API_key}
     }
     render() {
         if (!this.state) {
