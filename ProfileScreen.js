@@ -30,10 +30,11 @@ export class ProfileScreen extends React.Component {
         };
     };
     componentWillMount() {
+        var self = this;
         AsyncStorage.getItem('userProfile').then(profileString => {
             if (profileString) {
                 var profile = JSON.parse(profileString);
-                this.setState({
+                self.setState({
                     name: profile["name"] || 'cyclist',
                     city: profile["city"] || 'city',
                     notify1hAdvance: profile["notify1hAdvance"] || false,
@@ -43,7 +44,7 @@ export class ProfileScreen extends React.Component {
             } else {
                 AsyncStorage.getItem('firstProfile').then(firstProfileString => {
                     var firstProfile = JSON.parse(firstProfileString);
-                    this.setState({
+                    self.setState({
                         name: firstProfile.name,
                         city: firstProfile.city,
                         notify1hAdvance: false,
@@ -53,23 +54,23 @@ export class ProfileScreen extends React.Component {
                 });
             }
         }).then(() => {
-            if (this.state.routes[0]) {
-                this.setState({
+            if (self.state.routes[0]) {
+                self.setState({
                     index0: "0existing"
                 });
             }
-            if (this.state.routes[1]) {
-                this.setState({
+            if (self.state.routes[1]) {
+                self.setState({
                     index1: "1existing"
                 });
             }
-            if (this.state.routes[2]) {
-                this.setState({
+            if (self.state.routes[2]) {
+                self.setState({
                     index2: "2existing"
                 });
             }
-            if (this.state.routes[3]) {
-                this.setState({
+            if (self.state.routes[3]) {
+                self.setState({
                     index3: "3existing"
                 });
             }

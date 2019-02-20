@@ -6,13 +6,20 @@ import axios from 'axios';
 
 import {FadeInImage} from './FadeInImage';
 import {ProfileLogo} from './ProfileLogo';
-
+import {WeatherSwitch} from './WeatherSwitch';
+import {CurrentWeatherComponent} from './CurrentWeatherComponent';
+import {FutureWeatherComponent} from './FutureWeatherComponent';
 
 export class CurrentWeatherScreen extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            futureWeather: false
+        };
         this.onPress = this.onPress.bind(this);
         this.clear = this.clear.bind(this);
+        this.toggleSwitch = this.toggleSwitch.bind(this);
+        this.onWillFocus = this.onWillFocus.bind(this);
     }
     static navigationOptions = ({navigation}) => {
         return {
@@ -26,8 +33,10 @@ export class CurrentWeatherScreen extends React.Component {
             )
         };
     };
+    _s0: NavigationEventSubscription;
     componentDidMount() {
         this.props.navigation.setParams({ editProfile: this.onPress });
+        this._s0 = this.props.navigation.addListener('willFocus', this.onWillFocus);
         AsyncStorage.getItem('userProfile').then(profileString => {
             if (profileString) {
                 var profile = JSON.parse(profileString);
@@ -51,63 +60,67 @@ export class CurrentWeatherScreen extends React.Component {
                 });
             }
         }).then(() => {
-
-            axios.get(`https://api.openweathermap.org/data/2.5/weather?id=2950159&APPID=e18ffb68e1205393de8354e0e703f05b`).then(results => {
-                // console.log("results from openweathermap: ", results.data);
-                this.setState({test: "results from OWM!!!!"});
-                this.setState({results: results.data.weather[0].description});
-            }).catch(err => {
-                console.log('err getting weather results: ', err);
-            });
-
-
-
-            // console.log("gonna make axios request for city id now!!");
-            // axios.get(`http://192.168.50.197:8080/${this.state.city}/id`).then(cityid => {
-            //     // console.log(cityid);
-            //     axios.get(`http://192.168.50.197:8080/${cityid}/currentweather`).then(data => {
-            //         // console.log("data from server: ", data);
-            //         this.setState({test: "results from OWM!!!!"});
-            //         this.setState({results: data.visibility});
-            //     }).catch(err => {
-            //         console.log(err => 'error getting weather info: ', err);
-            //         this.setState({error: "error getting weather info :("})
-            //     });
-            // }).catch(err => {
-            //     console.log('error getting cityid: ', err);
-            //     this.setState({test: "no weather info for your city :("});
-            //     //setState so that a custom message appears: "no weather info for your city"
-            // });
-
-
+            //////////////////////////////////////////////////////////////////// TO DO: calculate the next start of trip//////////////////////////////////
+            this.setState({
+                startDay: "monday",
+                startTime: "8"
+            })
         }).catch(err => {
             console.log("err while mounting CurrentWeatherScreen: ", err);
         });
     }
+    componentWillUnmount() {
+        this._s0.remove();
+    }
+    onWillFocus() {
+        var self = this;
+        console.log('willFocus CurrentWeatherScreen');
+        AsyncStorage.getItem('userProfile').then(profileString => {
+            if (profileString) {
+                console.log('running if block');
+                var profile = JSON.parse(profileString);
+                return self.setState({
+                    name: profile["name"] || 'cyclist',
+                    city: profile["city"] || 'city',
+                    notify1hAdvance: profile["notify1hAdvance"] || null,
+                    notifyAtStart: profile["notifyAtStart"] || null,
+                    routes: profile["routes"] || []
+                }, () => console.log("this.state after setState in WillFocus: ", self.state));
+            }
+        }).catch(err => {
+            console.log('err during willFocus CurrentWeatherScreen: ', err);
+            console.log('this.state in catch WillFocus: ', self.state);
+        })
+    };
     onPress() {
         this.props.navigation.navigate('ProfileRoute');
+    }
+    toggleSwitch(value) {
+        this.setState({
+            futureWeather: value
+        });
     }
     clear() {
         AsyncStorage.clear();
     }
     render() {
-
         if (!this.state) {
             return null;
         }
-        console.log("this.state.results: ", this.state.results);
+        console.log("this.state: ", this.state);
         return (
           <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "white" }}>
-            <FadeInImage source={require('./assets/bike.png')} style={{flex:1, height: 150, width: 150}} />
-            <View style={{flex: 2}}>
-                <Text>Current Weather Screen</Text>
-                <Button onPress={this.clear}
-                    title="Clear Async Storage"
-                />
-                {this.state.test && <Text>{this.state.test}</Text>}
-                {this.state.results && <Text style={{fontSize: 40}}>{this.state.results}</Text>}
-                {this.state.error && <Text>{this.state.error}</Text>}
-            </View>
+            {!this.state.futureWeather && <CurrentWeatherComponent city={this.state.city}/>}
+            {this.state.futureWeather && this.state.routes && <FutureWeatherComponent city={this.state.city} startDay={this.state.startDay} startTime={this.state.startTime} />}
+
+            {this.state.routes && this.state.routes.length > 0 && <WeatherSwitch
+                toggleSwitch = {this.toggleSwitch}
+                futureWeather = {this.state.futureWeather}
+            />}
+
+            <Button onPress={this.clear}
+                title="Clear Async Storage"
+            />
           </View>
         );
     }

@@ -29,6 +29,18 @@ const AppStack = createStackNavigator(
 const RegisterStack = createStackNavigator(
     {
         WelcomeRoute: WelcomeScreen
+    },
+    {
+        initialRouteName: "WelcomeRoute",
+        defaultNavigationOptions: {
+            headerStyle: {
+                backgroundColor: "#7BC9D3"
+            },
+            headerTintColor: 'white',
+            headerTitleStyle: {
+                fontWeight: 'bold'
+            }
+        }
     }
 );
 
