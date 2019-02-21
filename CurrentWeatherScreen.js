@@ -365,7 +365,7 @@ export class CurrentWeatherScreen extends React.Component {
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "white" }}>
                 <View style={{flex: 3}}>
                     {!this.state.futureWeather && this.state.city && <CurrentWeatherComponent city={this.state.city} key={this.state.city} />}
-                    {this.state.futureWeather && this.state.routes && <FutureWeatherComponent city={this.state.city} startDay={this.state.startDay} startTime={this.state.startTime} nextTrip={this.state.nextTrip} />}
+                    {this.state.futureWeather && this.state.nextTrip && this.state.routes && <FutureWeatherComponent city={this.state.city} startDay={this.state.startDay} startTime={this.state.startTime} nextTrip={this.state.nextTrip} key={this.state.nextTrip + this.state.city} />}
                 </View>
                 <View style={{flex:1}}>
                     {this.state.routes && this.state.routes.length > 0 && <WeatherSwitch

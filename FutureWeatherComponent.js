@@ -17,51 +17,34 @@ export class FutureWeatherComponent extends React.Component {
 
         //if nextTrip is more than 5 days (432 000 000 milliseconds) away, setState to render a message
         //else do axios request to api
-
-        axios.get(`api.openweathermap.org/data/2.5/forecast?q=${this.props.city}&units=metric&APPID=${API_key}`).then(results => {
+        console.log("gonna make API Future request now");
+        axios.get(`https://api.openweathermap.org/data/2.5/forecast?q=${this.props.city}&units=metric&APPID=${API_key}`).then(results => {
 
             var nextForecast = [432000000, null];
 
             //loop over all dt*1000 (= date in ms)
             for (let i = results.data.list.length - 1; i >= 0; i--) {
                 var delta = this.props.nextTrip - (results.data.list[i].dt * 1000);
-                if (delta > 0 && delta < nextForecast[0]) {
+                if (delta >= 0 && delta < nextForecast[0]) {
                     nextForecast[0] = delta;
                     nextForecast[1] = i;
                 }
             }
 
             nextForecastIndex = nextForecast[1];
-
+            console.log("nextForecastIndex: ", nextForecastIndex);
             this.setState({results: results.data.list[nextForecastIndex].weather[0].description});
 
 
-            // var forecastDate = new Date(1550998800*1000);
-            // console.log("forecast date: ", forecastDate);
+            var forecastDate = new Date(results.data.list[nextForecastIndex].dt*1000);
+            console.log("forecast date: ", forecastDate, forecastDate.getHours());
 
 
-            this.setState({test: "results from OWM!!!!!!!"});
+            this.setState({test: "results from OWM!!!"});
 
         }).catch(err => {
             console.log('err getting weather results: ', err);
         });
-
-            // console.log("gonna make axios request for city id now!!");
-            // axios.get(`http://192.168.50.197:8080/${this.state.city}/id`).then(cityid => {
-            //     // console.log(cityid);
-            //     axios.get(`http://192.168.50.197:8080/${cityid}/currentweather`).then(data => {
-            //         // console.log("data from server: ", data);
-            //         this.setState({test: "results from OWM!!!!"});
-            //         this.setState({results: data.visibility});
-            //     }).catch(err => {
-            //         console.log(err => 'error getting weather info: ', err);
-            //         this.setState({error: "error getting weather info :("})
-            //     });
-            // }).catch(err => {
-            //     console.log('error getting cityid: ', err);
-            //     this.setState({test: "no weather info for your city :("});
-            //     //setState so that a custom message appears: "no weather info for your city"
-            // });
     }
     render() {
         if (!this.state) {
