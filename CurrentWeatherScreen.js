@@ -14,7 +14,8 @@ export class CurrentWeatherScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            futureWeather: false
+            futureWeather: false,
+            isMounted: false
         };
         this.onPress = this.onPress.bind(this);
         this.clear = this.clear.bind(this);
@@ -36,28 +37,36 @@ export class CurrentWeatherScreen extends React.Component {
     };
     _s0: NavigationEventSubscription;
     componentDidMount() {
+        this.setState({
+            isMounted: true
+        });
         this.props.navigation.setParams({ editProfile: this.onPress });
         this._s0 = this.props.navigation.addListener('willFocus', this.onWillFocus);
+        console.log("componentDidMount CurrentWeatherScreen");
         AsyncStorage.getItem('userProfile').then(profileString => {
             if (profileString) {
                 var profile = JSON.parse(profileString);
-                return this.setState({
-                    name: profile["name"] || 'cyclist',
-                    city: profile["city"] || 'city',
-                    notify1hAdvance: profile["notify1hAdvance"] || null,
-                    notifyAtStart: profile["notifyAtStart"] || null,
-                    routes: profile["routes"] || []
-                });
+                if (this.state.isMounted) {
+                    return this.setState({
+                        name: profile["name"] || 'cyclist',
+                        city: profile["city"] || 'city',
+                        notify1hAdvance: profile["notify1hAdvance"] || null,
+                        notifyAtStart: profile["notifyAtStart"] || null,
+                        routes: profile["routes"] || []
+                    });
+                }
             } else {
                 AsyncStorage.getItem('firstProfile').then(firstProfileString => {
                     var firstProfile = JSON.parse(firstProfileString);
-                    return this.setState({
-                        name: firstProfile.name,
-                        city: firstProfile.city,
-                        notify1hAdvance: null,
-                        notifyAtStart: null,
-                        routes: []
-                    });
+                    if (this.state.isMounted) {
+                        return this.setState({
+                            name: firstProfile.name,
+                            city: firstProfile.city,
+                            notify1hAdvance: null,
+                            notifyAtStart: null,
+                            routes: []
+                        });
+                    }
                 });
             }
         }).then(() => {
@@ -65,8 +74,6 @@ export class CurrentWeatherScreen extends React.Component {
                 var now = new Date();
                 var startDay;
                 var startTime;
-                console.log("current date: ", now);
-                console.log("routes: ", this.state.routes);
                 if (this.state.routes[0]) {
                     startDate0 = this.getStartDay(now, this.state.routes[0]);
                     var delta0 = startDate0 - now;
@@ -98,7 +105,6 @@ export class CurrentWeatherScreen extends React.Component {
                 } else if (delta0) {
                     var delta = delta0
                 }
-                console.log("delta: ", delta);
                 if (delta == delta0) {
                     this.setState({
                         startDay: weekday[startDate00.getDay()],
@@ -131,6 +137,7 @@ export class CurrentWeatherScreen extends React.Component {
     }
     componentWillUnmount() {
         this._s0.remove();
+        this.state.isMounted = false;
     }
     onWillFocus() {
         var self = this;
@@ -138,27 +145,25 @@ export class CurrentWeatherScreen extends React.Component {
         AsyncStorage.getItem('userProfile').then(profileString => {
             if (profileString) {
                 var profile = JSON.parse(profileString);
-                return self.setState({
-                    name: profile["name"] || 'cyclist',
-                    city: profile["city"] || 'city',
-                    notify1hAdvance: profile["notify1hAdvance"] || null,
-                    notifyAtStart: profile["notifyAtStart"] || null,
-                    routes: profile["routes"] || []
-                });
+                if (this.state.isMounted) {
+                    return self.setState({
+                        name: profile["name"] || 'cyclist',
+                        city: profile["city"] || 'city',
+                        notify1hAdvance: profile["notify1hAdvance"] || null,
+                        notifyAtStart: profile["notifyAtStart"] || null,
+                        routes: profile["routes"] || []
+                    });
+                }
             }
         }).then(() => {
             if (this.state.routes.length > 0) {
                 var now = new Date();
                 var startDay;
                 var startTime;
-                console.log("current date: ", now);
-                console.log("routes: ", this.state.routes);
                 if (this.state.routes[0]) {
                     startDate0 = this.getStartDay(now, this.state.routes[0]);
                     var delta0 = startDate0 - now;
                     var startDate00 = new Date(startDate0);
-                    console.log("startDate00: ", startDate00);
-                    console.log("delta0: ", delta0);
                 }
                 if (this.state.routes[1]) {
                     startDate1 = this.getStartDay(now, this.state.routes[1]);
@@ -186,7 +191,6 @@ export class CurrentWeatherScreen extends React.Component {
                 } else if (delta0) {
                     var delta = delta0
                 }
-                console.log("delta: ", delta);
                 if (delta == delta0) {
                     this.setState({
                         startDay: weekday[startDate00.getDay()],
@@ -367,11 +371,10 @@ export class CurrentWeatherScreen extends React.Component {
         if (!this.state) {
             return null;
         }
-        // console.log("this.state CurrentWeatherScreen: ", this.state);
         return (
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "white" }}>
                 <View style={{flex: 3}}>
-                    {!this.state.futureWeather && <CurrentWeatherComponent city={this.state.city}/>}
+                    {!this.state.futureWeather && <CurrentWeatherComponent city={this.state.city} key={this.state.city} />}
                     {this.state.futureWeather && this.state.routes && <FutureWeatherComponent city={this.state.city} startDay={this.state.startDay} startTime={this.state.startTime} nextTrip={this.state.nextTrip} />}
                 </View>
                 <View style={{flex:1}}>
