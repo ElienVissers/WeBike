@@ -52,7 +52,7 @@ export class CurrentWeatherComponent extends React.Component {
         }
         return (
            <View style={styles.container}>
-                {!this.state.error && <WeatherComponent id={this.state.id} description={this.state.description} temp={this.state.temp} key={this.state.temp} />}
+                {!this.state.error && <WeatherComponent id={this.state.id} description={this.state.description} temp={this.state.temp} key={this.state.temp} future={false} />}
                 {this.state.error && <Text style={styles.error}>{this.state.error}</Text>}
            </View>
         );

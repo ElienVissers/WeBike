@@ -34,13 +34,19 @@ export class FutureWeatherComponent extends React.Component {
             }
             nextForecastIndex = nextForecast[1];
             console.log("nextForecastIndex: ", nextForecastIndex);
+            var forecastDate = new Date(results.data.list[nextForecastIndex].dt*1000);
+            console.log("forecast date: ", forecastDate);
+            if (forecastDate.getHours() >= 18 || forecastDate.getHours() < 7) {
+                var futureDay = false;
+            } else {
+                var futureDay = true;
+            }
             self.setState({
                 description: results.data.list[nextForecastIndex].weather[0].description,
                 id: results.data.list[nextForecastIndex].weather[0].id,
-                temp: results.data.list[nextForecastIndex].main.temp
+                temp: results.data.list[nextForecastIndex].main.temp,
+                futureDay: futureDay
             });
-            // var forecastDate = new Date(results.data.list[nextForecastIndex].dt*1000);
-            // console.log("forecast date: ", forecastDate);
         }).catch(err => {
             console.log('err getting weather results: ', err);
             self.setState({
@@ -55,8 +61,7 @@ export class FutureWeatherComponent extends React.Component {
         console.log("state during render: ", this.state.description, this.state.id, this.state.temp);
         return (
            <View style={styles.container}>
-                {!this.state.error && <WeatherComponent id={this.state.id} description={this.state.description} temp={this.state.temp} key={this.state.temp} />}
-                {!this.state.error && <Text>Next Trip: {this.props.startDay} at {this.props.startTime}h.</Text>}
+                {!this.state.error && <WeatherComponent id={this.state.id} description={this.state.description} temp={this.state.temp} key={this.state.temp} future={true} futureDay={this.state.futureDay} />}
                 {this.state.isTooSoon && <Text style={styles.error}>It's too early to get relevant weather data. Try again within 5 days of your trip!</Text>}
                 {this.state.error && <Text style={styles.error}>{this.state.error}</Text>}
            </View>

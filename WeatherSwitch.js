@@ -15,7 +15,7 @@ export class WeatherSwitch extends React.Component {
                     trackColor={{false: 'gold', true: 'gold'}}
                     thumbColor="gold"
                 />
-                {this.props.futureWeather && <Text style={{color:'gold'}}>Weather at next trip</Text>}
+                {this.props.futureWeather && <Text style={{color:'gold'}}>Weather at next trip:</Text>}
                 {!this.props.futureWeather && <Text style={{color:'gold'}}>Current Weather</Text>}
            </View>
         );
@@ -28,7 +28,9 @@ const styles = StyleSheet.create ({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 10,
-        paddingTop: 0
+        marginBottom: 0,
+        marginTop: 40,
+        paddingTop: 0,
+        paddingBottom: 0
     }
 });

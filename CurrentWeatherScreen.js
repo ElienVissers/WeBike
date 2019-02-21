@@ -361,17 +361,23 @@ export class CurrentWeatherScreen extends React.Component {
         if (!this.state) {
             return null;
         }
+        var now = new Date();
+        var weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        if (this.state.startDay == weekday[now.getDay()]) {var today = true}
         return (
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "white" }}>
                 <View style={{flex: 3}}>
                     {!this.state.futureWeather && this.state.city && <CurrentWeatherComponent city={this.state.city} key={this.state.city} />}
                     {this.state.futureWeather && this.state.nextTrip && this.state.routes && <FutureWeatherComponent city={this.state.city} startDay={this.state.startDay} startTime={this.state.startTime} nextTrip={this.state.nextTrip} key={this.state.nextTrip + this.state.city} />}
                 </View>
-                <View style={{flex:1}}>
+                <View style={{flex:1, justifyContent:'center', alignItems: 'center'}}>
                     {this.state.routes && this.state.routes.length > 0 && <WeatherSwitch
                         toggleSwitch = {this.toggleSwitch}
                         futureWeather = {this.state.futureWeather}
                     />}
+                    {this.state.routes && this.state.routes.length > 0 && this.state.futureWeather && !today && <Text style={{color: 'gold', marginBottom: 50}}>{this.state.startDay} at {this.state.startTime}h</Text>}
+                    {this.state.routes && this.state.routes.length > 0 && this.state.futureWeather && today && <Text style={{color: 'gold', marginBottom: 50}}>Today at {this.state.startTime}h</Text>}
+                    {this.state.routes && this.state.routes.length > 0 && !this.state.futureWeather && <Text style={{color: 'white', marginBottom: 50, marginTop: 0}}>Next Trip: {this.state.startDay} at {this.state.startTime}h.</Text>}
                 </View>
             </View>
         );
