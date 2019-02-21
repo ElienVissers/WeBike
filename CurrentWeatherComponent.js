@@ -4,6 +4,7 @@ import { View, StyleSheet, Text, AsyncStorage } from 'react-native';
 import {API_key} from './secrets';
 
 import {FadeInImage} from './FadeInImage';
+import {WeatherComponent} from './WeatherComponent';
 import axios from 'axios';
 
 export class CurrentWeatherComponent extends React.Component {
@@ -29,11 +30,11 @@ export class CurrentWeatherComponent extends React.Component {
                 });
             }
         }).then(() => {
-            axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${self.state.city}&unites=metric&APPID=${API_key}`).then(results => {
+            axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${self.state.city}&units=metric&APPID=${API_key}`).then(results => {
                 self.setState({
                     description: results.data.weather[0].description,
                     id: Number(results.data.weather[0].id),
-                    temp: results.data.main.temp.split(".")[0]
+                    temp: results.data.main.temp
                 });
             }).catch(err => {
                 console.log('err getting weather results: ', err);

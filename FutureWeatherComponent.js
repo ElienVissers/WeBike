@@ -16,13 +16,15 @@ export class FutureWeatherComponent extends React.Component {
         console.log('FutureWeatherComponent mounted');
         var self = this;
         var now = new Date();
-        if (this.props.nextTrip - 432000000 > 0) {
+        console.log("this.props.nextTrip: ", this.props.nextTrip);
+        if (this.props.nextTrip - now >  432000000) {
             this.setState({
                 isTooSoon: true
             });
         }
         axios.get(`https://api.openweathermap.org/data/2.5/forecast?q=${this.props.city}&units=metric&APPID=${API_key}`).then(results => {
-            var nextForecast = [432000000, null];
+            console.log("results from API received");
+            var nextForecast = [432000000, 0];
             for (let i = results.data.list.length - 1; i >= 0; i--) {
                 var delta = this.props.nextTrip - (results.data.list[i].dt * 1000);
                 if (delta >= 0 && delta < nextForecast[0]) {
@@ -31,10 +33,11 @@ export class FutureWeatherComponent extends React.Component {
                 }
             }
             nextForecastIndex = nextForecast[1];
+            console.log("nextForecastIndex: ", nextForecastIndex);
             self.setState({
                 description: results.data.list[nextForecastIndex].weather[0].description,
-                id: Number(results.data.list[nextForecastIndex].weather[0].id),
-                temp: results.data.list[nextForecastIndex].main.temp.split(".")[0]
+                id: results.data.list[nextForecastIndex].weather[0].id,
+                temp: results.data.list[nextForecastIndex].main.temp
             });
             // var forecastDate = new Date(results.data.list[nextForecastIndex].dt*1000);
             // console.log("forecast date: ", forecastDate);
@@ -49,12 +52,11 @@ export class FutureWeatherComponent extends React.Component {
         if (!this.state) {
             return null;
         }
+        console.log("state during render: ", this.state.description, this.state.id, this.state.temp);
         return (
            <View style={styles.container}>
-                {!this.state.error &&
-                    <WeatherComponent id={this.state.id} description={this.state.description} temp={this.state.temp} key={this.state.temp}/>
-                    <Text>Next Trip: {this.props.startDay} at {this.props.startTime}h.</Text>
-                }
+                {!this.state.error && <WeatherComponent id={this.state.id} description={this.state.description} temp={this.state.temp} key={this.state.temp} />}
+                {!this.state.error && <Text>Next Trip: {this.props.startDay} at {this.props.startTime}h.</Text>}
                 {this.state.isTooSoon && <Text style={styles.error}>It's too early to get relevant weather data. Try again within 5 days of your trip!</Text>}
                 {this.state.error && <Text style={styles.error}>{this.state.error}</Text>}
            </View>
