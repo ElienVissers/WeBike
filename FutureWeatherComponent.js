@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 
+import {API_key} from './secrets';
+
 import {FadeInImage} from './FadeInImage';
 import axios from 'axios';
 
@@ -12,10 +14,34 @@ export class FutureWeatherComponent extends React.Component {
     componentDidMount() {
         console.log('FutureWeatherComponent mounted');
         console.log(this.props.city, this.props.startDay, this.props.startTime, this.props.nextTrip);
-        axios.get(`https://api.openweathermap.org/data/2.5/weather?id=2950159&APPID=e18ffb68e1205393de8354e0e703f05b`).then(results => {
-            // console.log("results from openweathermap: ", results.data);
-            this.setState({test: "results from OWM!!!!"});
-            this.setState({results: results.data.weather[0].description});
+
+        //if nextTrip is more than 5 days (432 000 000 milliseconds) away, setState to render a message
+        //else do axios request to api
+
+        axios.get(`api.openweathermap.org/data/2.5/forecast?q=${this.props.city}&units=metric&APPID=${API_key}`).then(results => {
+
+            var nextForecast = [432000000, null];
+
+            //loop over all dt*1000 (= date in ms)
+            for (let i = results.data.list.length - 1; i >= 0; i--) {
+                var delta = this.props.nextTrip - (results.data.list[i].dt * 1000);
+                if (delta > 0 && delta < nextForecast[0]) {
+                    nextForecast[0] = delta;
+                    nextForecast[1] = i;
+                }
+            }
+
+            nextForecastIndex = nextForecast[1];
+
+            this.setState({results: results.data.list[nextForecastIndex].weather[0].description});
+
+
+            // var forecastDate = new Date(1550998800*1000);
+            // console.log("forecast date: ", forecastDate);
+
+
+            this.setState({test: "results from OWM!!!!!!!"});
+
         }).catch(err => {
             console.log('err getting weather results: ', err);
         });

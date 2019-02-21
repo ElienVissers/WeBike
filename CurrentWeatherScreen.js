@@ -14,8 +14,7 @@ export class CurrentWeatherScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            futureWeather: false,
-            isMounted: false
+            futureWeather: false
         };
         this.onPress = this.onPress.bind(this);
         this.clear = this.clear.bind(this);
@@ -37,36 +36,29 @@ export class CurrentWeatherScreen extends React.Component {
     };
     _s0: NavigationEventSubscription;
     componentDidMount() {
-        this.setState({
-            isMounted: true
-        });
         this.props.navigation.setParams({ editProfile: this.onPress });
         this._s0 = this.props.navigation.addListener('willFocus', this.onWillFocus);
         console.log("componentDidMount CurrentWeatherScreen");
         AsyncStorage.getItem('userProfile').then(profileString => {
             if (profileString) {
                 var profile = JSON.parse(profileString);
-                if (this.state.isMounted) {
-                    return this.setState({
-                        name: profile["name"] || 'cyclist',
-                        city: profile["city"] || 'city',
-                        notify1hAdvance: profile["notify1hAdvance"] || null,
-                        notifyAtStart: profile["notifyAtStart"] || null,
-                        routes: profile["routes"] || []
-                    });
-                }
+                return this.setState({
+                    name: profile["name"] || 'cyclist',
+                    city: profile["city"] || 'city',
+                    notify1hAdvance: profile["notify1hAdvance"] || null,
+                    notifyAtStart: profile["notifyAtStart"] || null,
+                    routes: profile["routes"] || []
+                });
             } else {
                 AsyncStorage.getItem('firstProfile').then(firstProfileString => {
                     var firstProfile = JSON.parse(firstProfileString);
-                    if (this.state.isMounted) {
-                        return this.setState({
-                            name: firstProfile.name,
-                            city: firstProfile.city,
-                            notify1hAdvance: null,
-                            notifyAtStart: null,
-                            routes: []
-                        });
-                    }
+                    return this.setState({
+                        name: firstProfile.name,
+                        city: firstProfile.city,
+                        notify1hAdvance: null,
+                        notifyAtStart: null,
+                        routes: []
+                    });
                 });
             }
         }).then(() => {
@@ -145,15 +137,13 @@ export class CurrentWeatherScreen extends React.Component {
         AsyncStorage.getItem('userProfile').then(profileString => {
             if (profileString) {
                 var profile = JSON.parse(profileString);
-                if (this.state.isMounted) {
-                    return self.setState({
-                        name: profile["name"] || 'cyclist',
-                        city: profile["city"] || 'city',
-                        notify1hAdvance: profile["notify1hAdvance"] || null,
-                        notifyAtStart: profile["notifyAtStart"] || null,
-                        routes: profile["routes"] || []
-                    });
-                }
+                return self.setState({
+                    name: profile["name"] || 'cyclist',
+                    city: profile["city"] || 'city',
+                    notify1hAdvance: profile["notify1hAdvance"] || null,
+                    notifyAtStart: profile["notifyAtStart"] || null,
+                    routes: profile["routes"] || []
+                });
             }
         }).then(() => {
             if (this.state.routes.length > 0) {
@@ -374,7 +364,7 @@ export class CurrentWeatherScreen extends React.Component {
         return (
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "white" }}>
                 <View style={{flex: 3}}>
-                    {!this.state.futureWeather && <CurrentWeatherComponent city={this.state.city} key={this.state.city} />}
+                    {!this.state.futureWeather && this.state.city && <CurrentWeatherComponent city={this.state.city} key={this.state.city} />}
                     {this.state.futureWeather && this.state.routes && <FutureWeatherComponent city={this.state.city} startDay={this.state.startDay} startTime={this.state.startTime} nextTrip={this.state.nextTrip} />}
                 </View>
                 <View style={{flex:1}}>

@@ -29,8 +29,8 @@ export class CurrentWeatherComponent extends React.Component {
                 });
             }
         }).then(() => {
-            axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${self.state.city}&APPID=${API_key}`).then(results => {
-                self.setState({test: "results from OWM!!!!"});
+            axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${self.state.city}&unites=metric&APPID=${API_key}`).then(results => {
+                self.setState({test: "results from OWM!!!!!!!!!!!"});
                 self.setState({results: results.data.weather[0].description});
             }).catch(err => {
                 console.log('err getting weather results: ', err);
