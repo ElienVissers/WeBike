@@ -4,6 +4,7 @@ import { View, StyleSheet, Text } from 'react-native';
 import {API_key} from './secrets';
 
 import {FadeInImage} from './FadeInImage';
+import {WeatherComponent} from './WeatherComponent';
 import axios from 'axios';
 
 export class FutureWeatherComponent extends React.Component {
@@ -13,16 +14,15 @@ export class FutureWeatherComponent extends React.Component {
     }
     componentDidMount() {
         console.log('FutureWeatherComponent mounted');
-        console.log(this.props.city, this.props.startDay, this.props.startTime, this.props.nextTrip);
-
-        //if nextTrip is more than 5 days (432 000 000 milliseconds) away, setState to render a message
-        //else do axios request to api
-        console.log("gonna make API Future request now");
+        var self = this;
+        var now = new Date();
+        if (this.props.nextTrip - 432000000 > 0) {
+            this.setState({
+                isTooSoon: true
+            });
+        }
         axios.get(`https://api.openweathermap.org/data/2.5/forecast?q=${this.props.city}&units=metric&APPID=${API_key}`).then(results => {
-
             var nextForecast = [432000000, null];
-
-            //loop over all dt*1000 (= date in ms)
             for (let i = results.data.list.length - 1; i >= 0; i--) {
                 var delta = this.props.nextTrip - (results.data.list[i].dt * 1000);
                 if (delta >= 0 && delta < nextForecast[0]) {
@@ -30,20 +30,19 @@ export class FutureWeatherComponent extends React.Component {
                     nextForecast[1] = i;
                 }
             }
-
             nextForecastIndex = nextForecast[1];
-            console.log("nextForecastIndex: ", nextForecastIndex);
-            this.setState({results: results.data.list[nextForecastIndex].weather[0].description});
-
-
-            var forecastDate = new Date(results.data.list[nextForecastIndex].dt*1000);
-            console.log("forecast date: ", forecastDate, forecastDate.getHours());
-
-
-            this.setState({test: "results from OWM!!!"});
-
+            self.setState({
+                description: results.data.list[nextForecastIndex].weather[0].description,
+                id: Number(results.data.list[nextForecastIndex].weather[0].id),
+                temp: results.data.list[nextForecastIndex].main.temp.split(".")[0]
+            });
+            // var forecastDate = new Date(results.data.list[nextForecastIndex].dt*1000);
+            // console.log("forecast date: ", forecastDate);
         }).catch(err => {
             console.log('err getting weather results: ', err);
+            self.setState({
+                error: 'Oops, something went wrong while getting the weather data!'
+            });
         });
     }
     render() {
@@ -52,14 +51,12 @@ export class FutureWeatherComponent extends React.Component {
         }
         return (
            <View style={styles.container}>
-                <FadeInImage source={require('./assets/bike.png')} style={{flex:1, height: 150, width: 150}} />
-
-                <Text>Future Weather Component</Text>
-                <Text>Next Trip: {this.props.startDay} at {this.props.startTime}h.</Text>
-
-                {this.state.test && <Text>{this.state.test}</Text>}
-                {this.state.results && <Text style={{fontSize: 40}}>{this.state.results}</Text>}
-                {this.state.error && <Text>{this.state.error}</Text>}
+                {!this.state.error &&
+                    <WeatherComponent id={this.state.id} description={this.state.description} temp={this.state.temp} key={this.state.temp}/>
+                    <Text>Next Trip: {this.props.startDay} at {this.props.startTime}h.</Text>
+                }
+                {this.state.isTooSoon && <Text style={styles.error}>It's too early to get relevant weather data. Try again within 5 days of your trip!</Text>}
+                {this.state.error && <Text style={styles.error}>{this.state.error}</Text>}
            </View>
         );
     }
@@ -72,5 +69,8 @@ const styles = StyleSheet.create ({
         justifyContent: 'space-between',
         marginBottom: 10,
         paddingTop: 0
+    },
+    error: {
+        color: 'gray'
     }
 });

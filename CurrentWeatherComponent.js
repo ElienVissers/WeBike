@@ -30,10 +30,16 @@ export class CurrentWeatherComponent extends React.Component {
             }
         }).then(() => {
             axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${self.state.city}&unites=metric&APPID=${API_key}`).then(results => {
-                self.setState({test: "results from OWM!!!!!!!!!!!"});
-                self.setState({results: results.data.weather[0].description});
+                self.setState({
+                    description: results.data.weather[0].description,
+                    id: Number(results.data.weather[0].id),
+                    temp: results.data.main.temp.split(".")[0]
+                });
             }).catch(err => {
                 console.log('err getting weather results: ', err);
+                this.setState({
+                    error: "Oops, something went wrong while getting the weather data!"
+                });
             });
         }).catch(err => {
             console.log('error while mounting CurrentWeatherComponent', err);
@@ -45,13 +51,8 @@ export class CurrentWeatherComponent extends React.Component {
         }
         return (
            <View style={styles.container}>
-                <FadeInImage source={require('./assets/bike.png')} style={{flex:1, height: 150, width: 150}} />
-
-                <Text>Current Weather Component</Text>
-
-                {this.state.test && <Text>{this.state.test}</Text>}
-                {this.state.results && <Text style={{fontSize: 40}}>{this.state.results}</Text>}
-                {this.state.error && <Text>{this.state.error}</Text>}
+                {!this.state.error && <WeatherComponent id={this.state.id} description={this.state.description} temp={this.state.temp} key={this.state.temp} />}
+                {this.state.error && <Text style={styles.error}>{this.state.error}</Text>}
            </View>
         );
     }
@@ -64,5 +65,8 @@ const styles = StyleSheet.create ({
         justifyContent: 'space-between',
         marginBottom: 10,
         paddingTop: 0
+    },
+    error: {
+        color: 'grey'
     }
 });
