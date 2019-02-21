@@ -50,7 +50,7 @@ export class FutureWeatherComponent extends React.Component {
         }).catch(err => {
             console.log('err getting weather results: ', err);
             self.setState({
-                error: 'Oops, something went wrong while getting the weather data!'
+                error: 'Oops, something went wrong while getting the weather data! Please make sure your city is spelled correctly.'
             });
         });
     }
@@ -78,6 +78,10 @@ const styles = StyleSheet.create ({
         paddingTop: 0
     },
     error: {
-        color: 'gray'
+        flex: 1,
+        color: 'gray',
+        textAlign: 'center',
+        paddingTop: 200,
+        width: 300
     }
 });

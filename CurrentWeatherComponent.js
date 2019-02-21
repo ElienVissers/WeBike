@@ -39,7 +39,7 @@ export class CurrentWeatherComponent extends React.Component {
             }).catch(err => {
                 console.log('err getting weather results: ', err);
                 this.setState({
-                    error: "Oops, something went wrong while getting the weather data!"
+                    error: "Oops, something went wrong while getting the weather data! Please make sure your city is spelled correctly."
                 });
             });
         }).catch(err => {
@@ -68,6 +68,10 @@ const styles = StyleSheet.create ({
         paddingTop: 0
     },
     error: {
-        color: 'grey'
+        flex: 1,
+        color: 'grey',
+        textAlign: 'center',
+        paddingTop: 200,
+        width: 300
     }
 });
