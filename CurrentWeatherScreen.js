@@ -363,7 +363,11 @@ export class CurrentWeatherScreen extends React.Component {
         }
         var now = new Date();
         var weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-        if (this.state.startDay == weekday[now.getDay()]) {var today = true}
+        if (this.state.startDay == weekday[now.getDay()]) {
+            var today = true;
+        } else {
+            var today = false;
+        }
         return (
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "white" }}>
                 <View style={{flex: 3}}>

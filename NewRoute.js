@@ -118,6 +118,10 @@ export class NewRoute extends React.Component {
                         text="save this route"
                         onPress={this.saveRoute}
                     />
+                    <AddButton
+                        text="remove this route"
+                        onPress={this.removeRoute}
+                    />
 
                 </View>}
 

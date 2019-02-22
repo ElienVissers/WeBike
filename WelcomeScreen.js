@@ -80,8 +80,8 @@ const styles = StyleSheet.create({
     },
     mainImage : {
         flex:2,
-        height: 200,
-        width: 200
+        height: 175,
+        width: 175
     },
     mainContent: {
         flex: 3
