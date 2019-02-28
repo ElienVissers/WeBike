@@ -1,6 +1,7 @@
 # WeBike
 
-![](assets/icon.png)
+<img src="assets/icon.png" width=100 height=100>
+
 WeBike is a mobile application for android and iOs, written in [react-native](https://facebook.github.io/react-native/) and using data from [OpenWeatherMap](https://openweathermap.org/api).
 
 ## Features
