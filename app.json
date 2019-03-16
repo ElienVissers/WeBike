@@ -23,7 +23,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIndentifier": "exp.host.elienvisserssimilon.WeBike"
     },
     "android": {
         "package": "exp.host.elienvisserssimilon.WeBike"
