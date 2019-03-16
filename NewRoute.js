@@ -90,7 +90,7 @@ export class NewRoute extends React.Component {
                         <Picker.Item label="21-22" value="21-22" />
                         <Picker.Item label="22-23" value="22-23" />
                     </Picker>
-                    <Text style={styles.text}>Wat time do you arrive?</Text>
+                    <Text style={styles.text}>What time do you arrive?</Text>
                     <Picker
                         style={styles.picker}
                         selectedValue={this.state.arrive}
