@@ -4,7 +4,7 @@ import { Button } from 'react-native-elements';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
 import {AddButton} from './AddButton';
-import {NewRoute} from './NewRoute';
+import {RoutesContainer} from './RoutesContainer';
 import {NotificationSwitch} from './NotificationSwitch';
 
 
@@ -219,19 +219,13 @@ export class ProfileScreen extends React.Component {
                     <Text style={styles.title}>Weekly cycling routes:</Text>
 
 
-                    {this.state.routes && this.state.routes.map((route, index) => (
-                            <View>
-                                <NewRoute
-                                    updateBikeRoute={this.updateBikeRoute} removeBikeRoute={this.removeBikeRoute}
-                                    saved={!this.state.addingRoute}
-                                    days={route.days}
-                                    start={route.start}
-                                    arrive={route.arrive}
-                                    key={index}
-                                />
-                           </View>
-                        )
-                    )}
+                    {this.state.routes &&
+                        <RoutesContainer
+                            updateBikeRoute={this.updateBikeRoute} removeBikeRoute={this.removeBikeRoute}
+                            saved={!this.state.addingRoute}
+                            arrayOfRoutes={this.state.routes}
+                        />
+                    }
 
                     <Text style={{color: 'white', fontSize: 20, flex: 1}}>Spacing</Text>
 
