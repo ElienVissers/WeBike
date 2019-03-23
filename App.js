@@ -13,7 +13,7 @@ const AppStack = createStackNavigator(
         CurrentWeatherRoute: CurrentWeatherScreen
     },
     {
-        initialRouteName: "CurrentWeatherRoute",
+        initialRouteName: "ProfileRoute",
         defaultNavigationOptions: {
             headerStyle: {
                 backgroundColor: "#7BC9D3"

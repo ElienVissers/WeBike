@@ -125,14 +125,18 @@ export class NewRoute extends React.Component {
 
                 </View>}
 
-                {this.state.saved && <View style={{flexDirection: "row"}}>
-                    {this.state.days == "weekdays" && <Text style={styles.savedText}>On weekdays from {this.state.start}h untill {this.state.arrive}h.</Text>}
-                    {this.state.days == "weekend" && <Text style={styles.savedText}>In the weekend from {this.state.start}h untill {this.state.arrive}h.</Text>}
-                    <AddButton
-                        text="edit"
-                        onPress={this.editRoute}
-                    />
-                </View>}
+                {this.state.saved &&
+                    <View style={{flexDirection: "row"}}>
+                        {this.state.days == "weekdays" &&
+                        <Text style={styles.savedText}>On weekdays from {this.state.start}h untill {this.state.arrive}h.</Text>}
+                        {this.state.days == "weekend" &&
+                        <Text style={styles.savedText}>In the weekend from {this.state.start}h untill {this.state.arrive}h.
+                        </Text>}
+                        <AddButton
+                            text="edit"
+                            onPress={this.editRoute}
+                        />
+                    </View>}
             </ScrollView>
         );
     }

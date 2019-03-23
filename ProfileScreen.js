@@ -12,6 +12,7 @@ export class ProfileScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            addingRoute: false,
             index0: 0,
             index1: 1,
             index2: 2,
@@ -54,6 +55,7 @@ export class ProfileScreen extends React.Component {
                 });
             }
         }).then(() => {
+            // console.log("routes: ", self.state.routes);
             if (self.state.routes[0]) {
                 self.setState({
                     index0: "0existing"
@@ -103,8 +105,15 @@ export class ProfileScreen extends React.Component {
         });
     }
     addRoute() {
+        var addedRoute = {
+            addingRoute: true,
+            days: "weekdays",
+            start: "7-8",
+            arrive: "7-8"
+        };
         this.setState(prevState => ({
-            routes: [...prevState.routes, "tempRoute"]
+            addingRoute: true,
+            routes: [...prevState.routes, addedRoute]
         }));
     }
     updateBikeRoute(routeObject) {
@@ -209,37 +218,20 @@ export class ProfileScreen extends React.Component {
 
                     <Text style={styles.title}>Weekly cycling routes:</Text>
 
-                    {this.state.routes.length > 0 && <View>
-                        <NewRoute updateBikeRoute={this.updateBikeRoute} removeBikeRoute={this.removeBikeRoute} index={this.state.index0}
-                        saved={this.state.index0 == "0existing"}
-                        days={this.state.routes[0].days}
-                        start={this.state.routes[0].start}
-                        arrive={this.state.routes[0].arrive} />
-                    </View>}
 
-                    {this.state.routes.length > 1 && <View>
-                        <NewRoute updateBikeRoute={this.updateBikeRoute} removeBikeRoute={this.removeBikeRoute} index={this.state.index1}
-                        saved={this.state.index1 == "1existing"}
-                        days={this.state.routes[1].days}
-                        start={this.state.routes[1].start}
-                        arrive={this.state.routes[1].arrive} />
-                    </View>}
-
-                    {this.state.routes.length > 2 && <View>
-                        <NewRoute updateBikeRoute={this.updateBikeRoute} removeBikeRoute={this.removeBikeRoute} index={this.state.index2}
-                        saved={this.state.index2 == "2existing"}
-                        days={this.state.routes[2].days}
-                        start={this.state.routes[2].start}
-                        arrive={this.state.routes[2].arrive} />
-                    </View>}
-
-                    {this.state.routes.length > 3 && <View>
-                        <NewRoute updateBikeRoute={this.updateBikeRoute} removeBikeRoute={this.removeBikeRoute} index={this.state.index3}
-                        saved={this.state.index3 == "3existing"}
-                        days={this.state.routes[3].days}
-                        start={this.state.routes[3].start}
-                        arrive={this.state.routes[3].arrive} />
-                    </View>}
+                    {this.state.routes && this.state.routes.map((route, index) => (
+                            <View>
+                                <NewRoute
+                                    updateBikeRoute={this.updateBikeRoute} removeBikeRoute={this.removeBikeRoute}
+                                    saved={!this.state.addingRoute}
+                                    days={route.days}
+                                    start={route.start}
+                                    arrive={route.arrive}
+                                    key={index}
+                                />
+                           </View>
+                        )
+                    )}
 
                     <Text style={{color: 'white', fontSize: 20, flex: 1}}>Spacing</Text>
 
