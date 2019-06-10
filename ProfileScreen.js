@@ -12,7 +12,7 @@ export class ProfileScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            addingRoute: false,
+            // addingRoute: false,
             index0: 0,
             index1: 1,
             index2: 2,
@@ -22,6 +22,7 @@ export class ProfileScreen extends React.Component {
         this.addRoute = this.addRoute.bind(this);
         this.updateBikeRoute = this.updateBikeRoute.bind(this);
         this.removeBikeRoute = this.removeBikeRoute.bind(this);
+        this.openEditRouteScreen = this.openEditRouteScreen.bind(this);
         this.toggleSwitch = this.toggleSwitch.bind(this);
         this.toggleSwitch2 = this.toggleSwitch2.bind(this);
     }
@@ -89,6 +90,9 @@ export class ProfileScreen extends React.Component {
         this.setState({
             notifyAtStart: value
         });
+    }
+    openEditRouteScreen() {
+        this.props.navigation.navigate('EditRouteRoute');
     }
     onPress() {
         var userProfileString = JSON.stringify({
@@ -218,22 +222,21 @@ export class ProfileScreen extends React.Component {
 
                     <Text style={styles.title}>Weekly cycling routes:</Text>
 
-
-                    {this.state.routes &&
-                        <RoutesContainer
-                            updateBikeRoute={this.updateBikeRoute} removeBikeRoute={this.removeBikeRoute}
-                            saved={!this.state.addingRoute}
-                            arrayOfRoutes={this.state.routes}
-                        />
-                    }
+                    <RoutesContainer
+                        updateBikeRoute={this.updateBikeRoute}
+                        removeBikeRoute={this.removeBikeRoute}
+                        openEditRouteScreen={this.openEditRouteScreen}
+                        saved={!this.state.addingRoute}
+                        arrayOfRoutes={this.state.routes}
+                    />
 
                     <Text style={{color: 'white', fontSize: 20, flex: 1}}>Spacing</Text>
 
-                    {this.state.routes.length < 4 && <AddButton
+                    <AddButton
                         style={{flex: 1, marginBottom: 30}}
                         text="add bike route"
                         onPress={this.addRoute}
-                    />}
+                    />
 
                     <Text style={{color: 'white', fontSize: 20, flex: 1}}>Spacing</Text>
 
@@ -242,6 +245,9 @@ export class ProfileScreen extends React.Component {
                         raised={true}
                         onPress={this.onPress}
                     />
+
+                    <Text style={{color: 'white', fontSize: 20, flex: 1}}>Spacing</Text>
+
                 </ScrollView>
             </ScrollView>
         );

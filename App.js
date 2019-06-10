@@ -5,15 +5,17 @@ import { createSwitchNavigator, createStackNavigator, createAppContainer } from 
 import {WelcomeScreen} from './WelcomeScreen';
 import {ProfileScreen} from './ProfileScreen';
 import {CurrentWeatherScreen} from './CurrentWeatherScreen';
+import {EditRouteScreen} from './EditRouteScreen';
 import {LoadingScreen} from './LoadingScreen';
 
 const AppStack = createStackNavigator(
     {
         ProfileRoute: ProfileScreen,
-        CurrentWeatherRoute: CurrentWeatherScreen
+        CurrentWeatherRoute: CurrentWeatherScreen,
+        EditRouteRoute: EditRouteScreen
     },
     {
-        initialRouteName: "ProfileRoute",
+        initialRouteName: "CurrentWeatherRoute",
         defaultNavigationOptions: {
             headerStyle: {
                 backgroundColor: "#7BC9D3"
