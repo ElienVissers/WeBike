@@ -22,18 +22,21 @@ export class EditRouteScreen extends React.Component {
         };
     };
     saveRoute() {
-        let start = parseInt(this.state.start.split("-")[0], 10);
-        let arrive = parseInt(this.state.arrive.split("-")[1], 10);
-        if (start < arrive) {
-            this.props.updateBikeRoute({
-                days: this.state.days,
-                start: this.state.start,
-                arrive: this.state.arrive,
-                index: this.props.index
-            });
-            this.setState({
-                saved: true
-            });
+        if (this.state.start < this.state.arrive) {
+
+            //TO DO: saveRoute function --> take routes array from AsyncStorage and overwrite the index with routeId, save back to AsyncStorage
+            // this.setState(prevState => ({
+            //     routes: prevState.routes.map((item, index) => {
+            //         if (index == arrIndex) {
+            //             return routeObject;
+            //         } else {
+            //             return item;
+            //         }
+            //     })
+            // }));
+            //call function that forces update of ProfileScreen
+            //END of saveRoute function
+
         } else {
             Alert.alert(
                 'Wow, you cycle impossibly fast!',
@@ -42,10 +45,22 @@ export class EditRouteScreen extends React.Component {
         }
     }
     removeRoute() {
-        this.setState({
-            saved: true
-        });
-        this.props.removeBikeRoute(this.props.index);
+
+        //TO DO: removeRoute function --> take routes array from AsyncStorage and filter out the one with index routeId; save back to AsyncStorage
+        // this.setState(prevState => ({
+        //     routes: prevState.routes.filter(
+        //         i => {
+        //             if (i.index == route_index) {
+        //                 return false;
+        //             } else {
+        //                 return true;
+        //             }
+        //         }
+        //     )
+        // }));
+        //call function that forces update of ProfileScreen
+        //END of removeRoute function
+
     }
     render(){
         const {days, start, arrive} = this.state;

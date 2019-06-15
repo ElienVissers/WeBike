@@ -19,11 +19,10 @@ export class WelcomeScreen extends React.Component {
     };
     onPress() {
         if (this.state.name && this.state.city) {
-            var firstProfileString = JSON.stringify({
-                name: this.state.name,
-                city: this.state.city
-            });
-            AsyncStorage.setItem('firstProfile', firstProfileString).then(() => {
+            Promise.all([
+                AsyncStorage.setItem('name', JSON.stringify({name: this.state.name})),
+                AsyncStorage.setItem('city', JSON.stringify({city: this.state.city}))
+            ]).then(() => {
                 this.props.navigation.navigate('App');
             }).catch(err => {
                 console.log("err while saving name and city in WelcomeScreen: ", err);

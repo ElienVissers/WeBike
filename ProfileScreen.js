@@ -14,8 +14,6 @@ export class ProfileScreen extends React.Component {
         this.state = {};
         this.saveProfile = this.saveProfile.bind(this);
         this.addRoute = this.addRoute.bind(this);
-        this.updateBikeRoute = this.updateBikeRoute.bind(this);
-        this.removeBikeRoute = this.removeBikeRoute.bind(this);
         this.toggleSwitch1h = this.toggleSwitch1h.bind(this);
         this.toggleSwitchStart = this.toggleSwitchStart.bind(this);
     }
@@ -26,28 +24,27 @@ export class ProfileScreen extends React.Component {
     };
     componentWillMount() {
         var self = this;
-        AsyncStorage.getItem('userProfile').then(profileString => {
-            if (profileString) {
-                var profile = JSON.parse(profileString);
-                self.setState({
-                    name: profile["name"] || 'cyclist',
-                    city: profile["city"] || 'city',
-                    notify1hAdvance: profile["notify1hAdvance"] || false,
-                    notifyAtStart: profile["notifyAtStart"] || false,
-                    routes: profile["routes"] || []
-                });
-            } else {
-                AsyncStorage.getItem('firstProfile').then(firstProfileString => {
-                    var firstProfile = JSON.parse(firstProfileString);
-                    self.setState({
-                        name: firstProfile.name,
-                        city: firstProfile.city,
-                        notify1hAdvance: false,
-                        notifyAtStart: false,
-                        routes: []
-                    });
-                });
+        Promise.all([
+            AsyncStorage.getItem('name'),
+            AsyncStorage.getItem('city'),
+            AsyncStorage.getItem('notify1hAdvance'),
+            AsyncStorage.getItem('notifyAtStart'),
+            AsyncStorage.getItem('routes')
+        ])
+        .then(profileString => {
+            console.log("profileString: ", profileString);
+            var profile = [];
+            for (var i = 0; i < 5; i++) {
+                profile.push(JSON.parse(profileString[i]));
             }
+            console.log("profile: ", profile);
+            self.setState({
+                name: profile[0] != null ? Object.values(profile[0])[0] : 'cyclist',
+                city: profile[1] != null ? Object.values(profile[1])[0] : 'city',
+                notify1hAdvance: profile[2] != null ? Object.values(profile[2])[0] : null,
+                notifyAtStart: profile[3] != null ? Object.values(profile[3])[0] : null,
+                routes: profile[4] != null ? Object.values(profile[4])[0] : []
+            }, () => console.log("this.state in ProfileScreen: ", self.state));
         }).catch(err => {
             console.log("err loading profileInfo: ", err);
         });
@@ -63,14 +60,18 @@ export class ProfileScreen extends React.Component {
         });
     }
     saveProfile() {
-        var userProfileString = JSON.stringify({
-            name: this.state.name,
-            city: this.state.city,
-            notify1hAdvance: this.state.notify1hAdvance,
-            notifyAtStart: this.state.notifyAtStart,
-            routes: this.state.routes
-        });
-        AsyncStorage.setItem('userProfile', userProfileString).then(() => {
+        var nameString = JSON.stringify({name: this.state.name});
+        var cityString = JSON.stringify({city: this.state.city});
+        var notify1hAdvanceString = JSON.stringify({notify1hAdvance: this.state.notify1hAdvance});
+        var notifyAtStartString = JSON.stringify({notifyAtStart: this.state.notifyAtStart});
+        var routesString = JSON.stringify({routes: this.state.routes});
+        Promise.all([
+            AsyncStorage.setItem('name', nameString),
+            AsyncStorage.setItem('city', cityString),
+            AsyncStorage.setItem('notify1hAdvance', notify1hAdvanceString),
+            AsyncStorage.setItem('notifyAtStart', notifyAtStartString),
+            AsyncStorage.setItem('routes', routesString)
+        ]).then(() => {
             this.props.navigation.navigate('CurrentWeatherRoute');
         }).catch(err => {
             console.log("err while saving profile: ", err);
@@ -85,65 +86,6 @@ export class ProfileScreen extends React.Component {
         this.setState(prevState => ({
             routes: [...prevState.routes, addedRoute]
         }));
-    }
-    updateBikeRoute(routeObject) {
-        if (typeof routeObject.index == "string") {
-            //EXISTING BIKE ROUTE --> replace the routeObject on index arrIndex of the state.routes
-            let arrIndex = routeObject.index.slice(0,1);
-            this.setState(prevState => ({
-                routes: prevState.routes.map((item, index) => {
-                    if (index == arrIndex) {
-                        return routeObject;
-                    } else {
-                        return item;
-                    }
-                })
-            }));
-        } else {
-            //NEW BIKE ROUTE --> replace the tempRoute string in the state.routes with the routeObject
-            this.setState(prevState => ({
-                routes: prevState.routes.map(
-                    i => {
-                        if (i == "tempRoute") {
-                            return routeObject;
-                        } else {
-                            return i;
-                        }
-                    }
-                )
-            }));
-        }
-    }
-    removeBikeRoute(route_index) {
-        console.log("this.state.routes in removeBikeRoute:", this.state.routes);
-        console.log("route_index in removeBikeRoute:", route_index);
-        if (typeof route_index == "string") {
-            //EXISTING BIKE ROUTE
-            let arrIndex = route_index.slice(0,1);
-            console.log("arrIndex: ", arrIndex);
-            this.setState(prevState => ({
-                routes: prevState.routes.filter((item, index) => {
-                    if (item.index == arrIndex) {
-                        return false;
-                    } else {
-                        return true;
-                    }
-                })
-            }), () => console.log("this.state.routes (existing):", this.state.routes));
-        } else {
-            //NEW BIKE ROUTE
-            this.setState(prevState => ({
-                routes: prevState.routes.filter(
-                    i => {
-                        if (i.index == route_index) {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    }
-                )
-            }), () => console.log("this.state.routes (new):", this.state.routes));
-        }
     }
     render() {
         if (!this.state.routes) {

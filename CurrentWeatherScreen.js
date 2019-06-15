@@ -36,32 +36,33 @@ export class CurrentWeatherScreen extends React.Component {
     };
     _s0: NavigationEventSubscription;
     componentDidMount() {
+        var self = this;
         this.props.navigation.setParams({ editProfile: this.onPress });
         this._s0 = this.props.navigation.addListener('willFocus', this.onWillFocus);
         console.log("componentDidMount CurrentWeatherScreen");
-        AsyncStorage.getItem('userProfile').then(profileString => {
-            if (profileString) {
-                var profile = JSON.parse(profileString);
-                return this.setState({
-                    name: profile["name"] || 'cyclist',
-                    city: profile["city"] || 'city',
-                    notify1hAdvance: profile["notify1hAdvance"] || null,
-                    notifyAtStart: profile["notifyAtStart"] || null,
-                    routes: profile["routes"] || []
-                });
-            } else {
-                AsyncStorage.getItem('firstProfile').then(firstProfileString => {
-                    var firstProfile = JSON.parse(firstProfileString);
-                    return this.setState({
-                        name: firstProfile.name,
-                        city: firstProfile.city,
-                        notify1hAdvance: null,
-                        notifyAtStart: null,
-                        routes: []
-                    });
-                });
+        Promise.all([
+            AsyncStorage.getItem('name'),
+            AsyncStorage.getItem('city'),
+            AsyncStorage.getItem('notify1hAdvance'),
+            AsyncStorage.getItem('notifyAtStart'),
+            AsyncStorage.getItem('routes')
+        ])
+        .then(profileString => {
+            console.log("profileString: ", profileString);
+            var profile = [];
+            for (var j = 0; j < 5; j++) {
+                profile.push(JSON.parse(profileString[j]));
             }
+            console.log("profile: ", profile);
+            this.setState({
+                name: profile[0] != null ? Object.values(profile[0])[0] : 'cyclist',
+                city: profile[1] != null ? Object.values(profile[1])[0] : 'city',
+                notify1hAdvance: profile[2] != null ? Object.values(profile[2])[0] : null,
+                notifyAtStart: profile[3] != null ? Object.values(profile[3])[0] : null,
+                routes: profile[4] != null ? Object.values(profile[4])[0] : []
+            });
         }).then(() => {
+            console.log("this.state in CurrentWeatherScreen: ", self.state);
             if (this.state.routes.length > 0) {
                 var now = new Date();
                 var startDay;
@@ -134,17 +135,27 @@ export class CurrentWeatherScreen extends React.Component {
     onWillFocus() {
         var self = this;
         console.log('willFocus CurrentWeatherScreen');
-        AsyncStorage.getItem('userProfile').then(profileString => {
-            if (profileString) {
-                var profile = JSON.parse(profileString);
-                return self.setState({
-                    name: profile["name"] || 'cyclist',
-                    city: profile["city"] || 'city',
-                    notify1hAdvance: profile["notify1hAdvance"] || null,
-                    notifyAtStart: profile["notifyAtStart"] || null,
-                    routes: profile["routes"] || []
-                });
+        Promise.all([
+            AsyncStorage.getItem('name'),
+            AsyncStorage.getItem('city'),
+            AsyncStorage.getItem('notify1hAdvance'),
+            AsyncStorage.getItem('notifyAtStart'),
+            AsyncStorage.getItem('routes')
+        ])
+        .then(profileString => {
+            console.log("profileString: ", profileString);
+            var profile = [];
+            for (var i = 0; i < 5; i++) {
+                profile.push(JSON.parse(profileString[i]));
             }
+            console.log("profile: ", profile);
+            return self.setState({
+                name: profile[0] != null ? Object.values(profile[0])[0] : 'cyclist',
+                city: profile[1] != null ? Object.values(profile[1])[0] : 'city',
+                notify1hAdvance: profile[2] != null ? Object.values(profile[2])[0] : null,
+                notifyAtStart: profile[3] != null ? Object.values(profile[3])[0] : null,
+                routes: profile[4] != null ? Object.values(profile[4])[0] : []
+            });
         }).then(() => {
             if (this.state.routes.length > 0) {
                 var now = new Date();
