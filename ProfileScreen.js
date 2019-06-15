@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Image, TextInput, TouchableWithoutFeedback, StyleSheet, ScrollView, AsyncStorage } from "react-native";
+import { View, Text, TextInput, StyleSheet, ScrollView, AsyncStorage } from "react-native";
 import { Button } from 'react-native-elements';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
@@ -11,20 +11,13 @@ import {NotificationSwitch} from './NotificationSwitch';
 export class ProfileScreen extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            // addingRoute: false,
-            index0: 0,
-            index1: 1,
-            index2: 2,
-            index3: 3
-        };
-        this.onPress = this.onPress.bind(this);
+        this.state = {};
+        this.saveProfile = this.saveProfile.bind(this);
         this.addRoute = this.addRoute.bind(this);
         this.updateBikeRoute = this.updateBikeRoute.bind(this);
         this.removeBikeRoute = this.removeBikeRoute.bind(this);
-        this.openEditRouteScreen = this.openEditRouteScreen.bind(this);
-        this.toggleSwitch = this.toggleSwitch.bind(this);
-        this.toggleSwitch2 = this.toggleSwitch2.bind(this);
+        this.toggleSwitch1h = this.toggleSwitch1h.bind(this);
+        this.toggleSwitchStart = this.toggleSwitchStart.bind(this);
     }
     static navigationOptions = ({ navigation }) => {
         return {
@@ -55,46 +48,21 @@ export class ProfileScreen extends React.Component {
                     });
                 });
             }
-        }).then(() => {
-            // console.log("routes: ", self.state.routes);
-            if (self.state.routes[0]) {
-                self.setState({
-                    index0: "0existing"
-                });
-            }
-            if (self.state.routes[1]) {
-                self.setState({
-                    index1: "1existing"
-                });
-            }
-            if (self.state.routes[2]) {
-                self.setState({
-                    index2: "2existing"
-                });
-            }
-            if (self.state.routes[3]) {
-                self.setState({
-                    index3: "3existing"
-                });
-            }
         }).catch(err => {
             console.log("err loading profileInfo: ", err);
-        })
+        });
     }
-    toggleSwitch(value) {
+    toggleSwitch1h(value) {
         this.setState({
             notify1hAdvance: value
         });
     }
-    toggleSwitch2(value) {
+    toggleSwitchStart(value) {
         this.setState({
             notifyAtStart: value
         });
     }
-    openEditRouteScreen() {
-        this.props.navigation.navigate('EditRouteRoute');
-    }
-    onPress() {
+    saveProfile() {
         var userProfileString = JSON.stringify({
             name: this.state.name,
             city: this.state.city,
@@ -110,13 +78,11 @@ export class ProfileScreen extends React.Component {
     }
     addRoute() {
         var addedRoute = {
-            addingRoute: true,
             days: "weekdays",
             start: "7-8",
             arrive: "7-8"
         };
         this.setState(prevState => ({
-            addingRoute: true,
             routes: [...prevState.routes, addedRoute]
         }));
     }
@@ -209,13 +175,13 @@ export class ProfileScreen extends React.Component {
                     </View>
 
                     <NotificationSwitch
-                        toggleSwitch = {this.toggleSwitch}
+                        toggleSwitch = {this.toggleSwitch1h}
                         notify = {this.state.notify1hAdvance}
                         text = "notify me 1 hour before"
                     />
 
                     <NotificationSwitch
-                        toggleSwitch = {this.toggleSwitch2}
+                        toggleSwitch = {this.toggleSwitchStart}
                         notify = {this.state.notifyAtStart}
                         text = "notify me when I start"
                     />
@@ -228,6 +194,7 @@ export class ProfileScreen extends React.Component {
                         openEditRouteScreen={this.openEditRouteScreen}
                         saved={!this.state.addingRoute}
                         arrayOfRoutes={this.state.routes}
+                        navigation={this.props.navigation}
                     />
 
                     <Text style={{color: 'white', fontSize: 20, flex: 1}}>Spacing</Text>
@@ -240,10 +207,10 @@ export class ProfileScreen extends React.Component {
 
                     <Text style={{color: 'white', fontSize: 20, flex: 1}}>Spacing</Text>
 
-                    <Button buttonStyle={styles.button}
+                    <Button buttonStyle={styles.saveButton}
                         title="SAVE"
                         raised={true}
-                        onPress={this.onPress}
+                        onPress={this.saveProfile}
                     />
 
                     <Text style={{color: 'white', fontSize: 20, flex: 1}}>Spacing</Text>
@@ -280,7 +247,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: 'black'
     },
-    button: {
+    saveButton: {
         backgroundColor: "#7BC9D3",
         paddingTop: 5,
         paddingBottom: 5

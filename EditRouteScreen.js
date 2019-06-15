@@ -7,17 +7,50 @@ import {AddButton} from './AddButton';
 export class EditRouteScreen extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            routeId: this.props.navigation.getParam('routeId', "default"),
+            days: this.props.navigation.getParam('days', "default"),
+            start: this.props.navigation.getParam('start', "default"),
+            arrive: this.props.navigation.getParam('arrive', "default")
+        };
+        this.saveRoute = this.saveRoute.bind(this);
+        this.removeRoute = this.removeRoute.bind(this);
     }
     static navigationOptions = ({navigation}) => {
         return {
             title: 'Edit route'
         };
     };
+    saveRoute() {
+        let start = parseInt(this.state.start.split("-")[0], 10);
+        let arrive = parseInt(this.state.arrive.split("-")[1], 10);
+        if (start < arrive) {
+            this.props.updateBikeRoute({
+                days: this.state.days,
+                start: this.state.start,
+                arrive: this.state.arrive,
+                index: this.props.index
+            });
+            this.setState({
+                saved: true
+            });
+        } else {
+            Alert.alert(
+                'Wow, you cycle impossibly fast!',
+                "The arrival time must be after the departure time."
+            );
+        }
+    }
+    removeRoute() {
+        this.setState({
+            saved: true
+        });
+        this.props.removeBikeRoute(this.props.index);
+    }
     render(){
-        const {days, start, arrive} = this.props
+        const {days, start, arrive} = this.state;
         return(
-            <View style={styles.yellowContainer}>
+            <View style={styles.container}>
                 <Text style={styles.text}>When do you cycle (or want to)?</Text>
                 <Picker
                     style={styles.picker}
@@ -96,12 +129,11 @@ const styles = StyleSheet.create({
         paddingTop: 5,
         paddingBottom: 5,
     },
-    yellowContainer: {
-        borderWidth: 1,
-        borderColor: 'gold',
-        paddingTop: 5,
+    container: {
+        paddingTop: 20,
         paddingBottom: 5,
         paddingLeft: 15,
         paddingRight: 15,
-        marginBottom: 10}
+        marginBottom: 10
+    }
 });
