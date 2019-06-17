@@ -112,6 +112,7 @@ export class ProfileScreen extends React.Component {
         });
     }
     addRoute() {
+        //to do: make this open EditRouteScreen, give default values and routeId = arrayOfRoutes.length +1 
         var addedRoute = {
             days: "weekdays",
             start: "7-8",
@@ -122,7 +123,7 @@ export class ProfileScreen extends React.Component {
         }));
     }
     render() {
-        if (!this.state.routes || !this.state.name || !this.state.city) {
+        if (!this.state.routes) {
             return null;
         }
         return (
