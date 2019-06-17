@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Button, Image, Picker, TextInput, TouchableWithoutFeedback, AsyncStorage, StyleSheet } from "react-native";
+import { View, Text, Button, Image, Picker, TextInput, TouchableWithoutFeedback, AsyncStorage, StyleSheet, Alert } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
 import {AddButton} from './AddButton';
@@ -11,7 +11,8 @@ export class EditRouteScreen extends React.Component {
             routeId: this.props.navigation.getParam('routeId', "default"),
             days: this.props.navigation.getParam('days', "default"),
             start: this.props.navigation.getParam('start', "default"),
-            arrive: this.props.navigation.getParam('arrive', "default")
+            arrive: this.props.navigation.getParam('arrive', "default"),
+            arrayOfRoutes: this.props.navigation.getParam('arrayOfRoutes', "default")
         };
         this.saveRoute = this.saveRoute.bind(this);
         this.removeRoute = this.removeRoute.bind(this);
@@ -22,21 +23,19 @@ export class EditRouteScreen extends React.Component {
         };
     };
     saveRoute() {
-        if (this.state.start < this.state.arrive) {
-
-            //TO DO: saveRoute function --> take routes array from AsyncStorage and overwrite the index with routeId, save back to AsyncStorage
-            // this.setState(prevState => ({
-            //     routes: prevState.routes.map((item, index) => {
-            //         if (index == arrIndex) {
-            //             return routeObject;
-            //         } else {
-            //             return item;
-            //         }
-            //     })
-            // }));
-            //call function that forces update of ProfileScreen
-            //END of saveRoute function
-
+        if (parseInt(this.state.start.split("-")[0], 10) < parseInt(this.state.arrive.split("-")[1], 10)) {
+            this.state.arrayOfRoutes.splice(this.state.routeId, 1, {
+                days: this.state.days,
+                start: this.state.start,
+                arrive: this.state.arrive
+            });
+            console.log("new arrayOfRoutes: ", this.state.arrayOfRoutes);
+            var routesString = JSON.stringify({routes: this.state.arrayOfRoutes});
+            AsyncStorage.setItem('routes', routesString).then(() => {
+                this.props.navigation.navigate('ProfileRoute');
+            }).catch(err => {
+                console.log("err while saving route");
+            });
         } else {
             Alert.alert(
                 'Wow, you cycle impossibly fast!',
@@ -45,22 +44,14 @@ export class EditRouteScreen extends React.Component {
         }
     }
     removeRoute() {
-
-        //TO DO: removeRoute function --> take routes array from AsyncStorage and filter out the one with index routeId; save back to AsyncStorage
-        // this.setState(prevState => ({
-        //     routes: prevState.routes.filter(
-        //         i => {
-        //             if (i.index == route_index) {
-        //                 return false;
-        //             } else {
-        //                 return true;
-        //             }
-        //         }
-        //     )
-        // }));
-        //call function that forces update of ProfileScreen
-        //END of removeRoute function
-
+        this.state.arrayOfRoutes.splice(this.state.routeId, 1);
+        console.log("new arrayOfRoutes: ", this.state.arrayOfRoutes);
+        var routesString = JSON.stringify({routes: this.state.arrayOfRoutes});
+        AsyncStorage.setItem('routes', routesString).then(() => {
+            this.props.navigation.navigate('ProfileRoute');
+        }).catch(err => {
+            console.log("err while removing route");
+        });
     }
     render(){
         const {days, start, arrive} = this.state;

@@ -15,19 +15,15 @@ export class CurrentWeatherComponent extends React.Component {
     componentDidMount() {
         console.log('CurrentWeatherComponent mounted');
         var self = this;
-        AsyncStorage.getItem('userProfile').then(profileString => {
-            if (profileString) {
-                var profile = JSON.parse(profileString);
+        AsyncStorage.getItem('city').then(cityString => {
+            if (cityString) {
+                var city = JSON.parse(cityString);
+                console.log("city: ", city);
                 return this.setState({
-                    city: profile["city"]
+                    city: city["city"]
                 });
             } else {
-                return AsyncStorage.getItem('firstProfile').then(firstProfileString => {
-                    var firstProfile = JSON.parse(firstProfileString);
-                    return this.setState({
-                        city: firstProfile.city
-                    });
-                });
+                console.log("cannot find city in AsyncStorage (componentDidMount CurrentWeatherComponent)");
             }
         }).then(() => {
             axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${self.state.city}&units=metric&APPID=${API_key}`).then(results => {

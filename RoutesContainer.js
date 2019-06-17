@@ -28,7 +28,8 @@ export class RoutesContainer extends React.Component {
                                         routeId: index,
                                         days: route.days,
                                         start: route.start,
-                                        arrive: route.arrive
+                                        arrive: route.arrive,
+                                        arrayOfRoutes: arrayOfRoutes
                                     });
                                 }}
                             />

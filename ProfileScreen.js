@@ -16,13 +16,47 @@ export class ProfileScreen extends React.Component {
         this.addRoute = this.addRoute.bind(this);
         this.toggleSwitch1h = this.toggleSwitch1h.bind(this);
         this.toggleSwitchStart = this.toggleSwitchStart.bind(this);
+        this.onWillFocus = this.onWillFocus.bind(this);
     }
     static navigationOptions = ({ navigation }) => {
         return {
             title: 'Edit your profile'
         };
     };
+    _s0: NavigationEventSubscription;
     componentWillMount() {
+        var self = this;
+        this._s0 = this.props.navigation.addListener('willFocus', this.onWillFocus);
+        Promise.all([
+            AsyncStorage.getItem('name'),
+            AsyncStorage.getItem('city'),
+            AsyncStorage.getItem('notify1hAdvance'),
+            AsyncStorage.getItem('notifyAtStart'),
+            AsyncStorage.getItem('routes')
+        ])
+        .then(profileString => {
+            console.log("profileString: ", profileString);
+            var profile = [];
+            for (var i = 0; i < 5; i++) {
+                profile.push(JSON.parse(profileString[i]));
+            }
+            console.log("profile: ", profile);
+            self.setState({
+                name: profile[0] != null ? Object.values(profile[0])[0] : 'cyclist',
+                city: profile[1] != null ? Object.values(profile[1])[0] : 'city',
+                notify1hAdvance: profile[2] != null ? Object.values(profile[2])[0] : null,
+                notifyAtStart: profile[3] != null ? Object.values(profile[3])[0] : null,
+                routes: profile[4] != null ? Object.values(profile[4])[0] : []
+            }, () => console.log("this.state in ProfileScreen: ", self.state));
+        }).catch(err => {
+            console.log("err loading profileInfo (componentWillMount): ", err);
+        });
+    }
+    componentWillUnmount() {
+        this._s0.remove();
+    }
+    onWillFocus() {
+        console.log("willFocus ProfileScreen");
         var self = this;
         Promise.all([
             AsyncStorage.getItem('name'),
@@ -46,7 +80,7 @@ export class ProfileScreen extends React.Component {
                 routes: profile[4] != null ? Object.values(profile[4])[0] : []
             }, () => console.log("this.state in ProfileScreen: ", self.state));
         }).catch(err => {
-            console.log("err loading profileInfo: ", err);
+            console.log("err loading profileInfo (onWillFocus): ", err);
         });
     }
     toggleSwitch1h(value) {
@@ -88,7 +122,7 @@ export class ProfileScreen extends React.Component {
         }));
     }
     render() {
-        if (!this.state.routes) {
+        if (!this.state.routes || !this.state.name || !this.state.city) {
             return null;
         }
         return (
