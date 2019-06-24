@@ -2,11 +2,13 @@ import React from "react";
 import { View, Text, Button, Image, TextInput, TouchableWithoutFeedback, AsyncStorage } from "react-native";
 import { createSwitchNavigator, createStackNavigator, createAppContainer } from "react-navigation";
 
-import {WelcomeScreen} from './WelcomeScreen';
-import {ProfileScreen} from './ProfileScreen';
-import {CurrentWeatherScreen} from './CurrentWeatherScreen';
-import {EditRouteScreen} from './EditRouteScreen';
-import {LoadingScreen} from './LoadingScreen';
+import { registerRootComponent } from 'expo';
+
+import {WelcomeScreen} from '../WelcomeScreen';
+import {ProfileScreen} from '../ProfileScreen';
+import {CurrentWeatherScreen} from '../CurrentWeatherScreen';
+import {EditRouteScreen} from '../EditRouteScreen';
+import {LoadingScreen} from '../LoadingScreen';
 
 const AppStack = createStackNavigator(
     {
@@ -57,7 +59,7 @@ const AppContainer = createAppContainer(createSwitchNavigator(
     }
 ));
 
-export default class App extends React.Component {
+class App extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -67,3 +69,5 @@ export default class App extends React.Component {
         return <AppContainer />;
     }
 }
+
+registerRootComponent(App);
