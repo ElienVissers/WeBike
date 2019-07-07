@@ -29,7 +29,6 @@ export class EditRouteScreen extends React.Component {
                 start: this.state.start,
                 arrive: this.state.arrive
             });
-            console.log("new arrayOfRoutes: ", this.state.arrayOfRoutes);
             var routesString = JSON.stringify({routes: this.state.arrayOfRoutes});
             AsyncStorage.setItem('routes', routesString).then(() => {
                 this.props.navigation.navigate('ProfileRoute');
@@ -45,7 +44,6 @@ export class EditRouteScreen extends React.Component {
     }
     removeRoute() {
         this.state.arrayOfRoutes.splice(this.state.routeId, 1);
-        console.log("new arrayOfRoutes: ", this.state.arrayOfRoutes);
         var routesString = JSON.stringify({routes: this.state.arrayOfRoutes});
         AsyncStorage.setItem('routes', routesString).then(() => {
             this.props.navigation.navigate('ProfileRoute');
@@ -72,6 +70,7 @@ export class EditRouteScreen extends React.Component {
                     selectedValue={start}
                     onValueChange={(value) => this.setState({start: value})}
                 >
+                    <Picker.Item label="6-7" value="6-7" />
                     <Picker.Item label="7-8" value="7-8" />
                     <Picker.Item label="8-9" value="8-9" />
                     <Picker.Item label="9-10" value="9-10" />
@@ -95,6 +94,7 @@ export class EditRouteScreen extends React.Component {
                     selectedValue={arrive}
                     onValueChange={(value) => this.setState({arrive: value})}
                 >
+                    <Picker.Item label="6-7" value="6-7" />
                     <Picker.Item label="7-8" value="7-8" />
                     <Picker.Item label="8-9" value="8-9" />
                     <Picker.Item label="9-10" value="9-10" />
@@ -111,7 +111,7 @@ export class EditRouteScreen extends React.Component {
                     <Picker.Item label="20-21" value="20-21" />
                     <Picker.Item label="21-22" value="21-22" />
                     <Picker.Item label="22-23" value="22-23" />
-                    <Picker.Item label="23-00" value="23-00" />
+                    <Picker.Item label="23-00" value="00-00" />
                 </Picker>
                 <CustomWhiteButton
                     text="save this route"

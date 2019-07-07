@@ -38,7 +38,6 @@ export class CurrentWeatherScreen extends React.Component {
         var self = this;
         this.props.navigation.setParams({ editProfile: this.onPress });
         this._s0 = this.props.navigation.addListener('willFocus', this.onWillFocus);
-        console.log("componentDidMount CurrentWeatherScreen");
         Promise.all([
             AsyncStorage.getItem('name'),
             AsyncStorage.getItem('city'),
@@ -47,12 +46,10 @@ export class CurrentWeatherScreen extends React.Component {
             AsyncStorage.getItem('routes')
         ])
         .then(profileString => {
-            console.log("profileString: ", profileString);
             var profile = [];
             for (var j = 0; j < 5; j++) {
                 profile.push(JSON.parse(profileString[j]));
             }
-            console.log("profile: ", profile);
             this.setState({
                 name: profile[0] != null ? Object.values(profile[0])[0] : 'cyclist',
                 city: profile[1] != null ? Object.values(profile[1])[0] : 'city',
@@ -61,7 +58,6 @@ export class CurrentWeatherScreen extends React.Component {
                 routes: profile[4] != null ? Object.values(profile[4])[0] : []
             });
         }).then(() => {
-            console.log("this.state in CurrentWeatherScreen: ", self.state);
             if (this.state.routes.length > 0) {
                 var now = new Date();
                 var startDay;
@@ -133,7 +129,6 @@ export class CurrentWeatherScreen extends React.Component {
     }
     onWillFocus() {
         var self = this;
-        console.log('willFocus CurrentWeatherScreen');
         Promise.all([
             AsyncStorage.getItem('name'),
             AsyncStorage.getItem('city'),
@@ -142,12 +137,10 @@ export class CurrentWeatherScreen extends React.Component {
             AsyncStorage.getItem('routes')
         ])
         .then(profileString => {
-            console.log("profileString: ", profileString);
             var profile = [];
             for (var i = 0; i < 5; i++) {
                 profile.push(JSON.parse(profileString[i]));
             }
-            console.log("profile: ", profile);
             return self.setState({
                 name: profile[0] != null ? Object.values(profile[0])[0] : 'cyclist',
                 city: profile[1] != null ? Object.values(profile[1])[0] : 'city',

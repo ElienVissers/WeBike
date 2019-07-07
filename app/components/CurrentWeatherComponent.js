@@ -12,12 +12,10 @@ export class CurrentWeatherComponent extends React.Component {
         this.state = {};
     }
     componentDidMount() {
-        console.log('CurrentWeatherComponent mounted');
         var self = this;
         AsyncStorage.getItem('city').then(cityString => {
             if (cityString) {
                 var city = JSON.parse(cityString);
-                console.log("city: ", city);
                 return this.setState({
                     city: city["city"]
                 });

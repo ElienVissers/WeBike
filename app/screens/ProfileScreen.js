@@ -35,19 +35,17 @@ export class ProfileScreen extends React.Component {
             AsyncStorage.getItem('routes')
         ])
         .then(profileString => {
-            console.log("profileString: ", profileString);
             var profile = [];
             for (var i = 0; i < 5; i++) {
                 profile.push(JSON.parse(profileString[i]));
             }
-            console.log("profile: ", profile);
             self.setState({
                 name: profile[0] != null ? Object.values(profile[0])[0] : 'cyclist',
                 city: profile[1] != null ? Object.values(profile[1])[0] : 'city',
                 notify1hAdvance: profile[2] != null ? Object.values(profile[2])[0] : null,
                 notifyAtStart: profile[3] != null ? Object.values(profile[3])[0] : null,
                 routes: profile[4] != null ? Object.values(profile[4])[0] : []
-            }, () => console.log("this.state in ProfileScreen: ", self.state));
+            });
         }).catch(err => {
             console.log("err loading profileInfo (componentWillMount): ", err);
         });
@@ -56,7 +54,6 @@ export class ProfileScreen extends React.Component {
         this._s0.remove();
     }
     onWillFocus() {
-        console.log("willFocus ProfileScreen");
         var self = this;
         Promise.all([
             AsyncStorage.getItem('name'),
@@ -66,19 +63,17 @@ export class ProfileScreen extends React.Component {
             AsyncStorage.getItem('routes')
         ])
         .then(profileString => {
-            console.log("profileString: ", profileString);
             var profile = [];
             for (var i = 0; i < 5; i++) {
                 profile.push(JSON.parse(profileString[i]));
             }
-            console.log("profile: ", profile);
             self.setState({
                 name: profile[0] != null ? Object.values(profile[0])[0] : 'cyclist',
                 city: profile[1] != null ? Object.values(profile[1])[0] : 'city',
                 notify1hAdvance: profile[2] != null ? Object.values(profile[2])[0] : null,
                 notifyAtStart: profile[3] != null ? Object.values(profile[3])[0] : null,
                 routes: profile[4] != null ? Object.values(profile[4])[0] : []
-            }, () => console.log("this.state in ProfileScreen: ", self.state));
+            });
         }).catch(err => {
             console.log("err loading profileInfo (onWillFocus): ", err);
         });
@@ -115,8 +110,8 @@ export class ProfileScreen extends React.Component {
         //to do: make this open EditRouteScreen, give default values and routeId = arrayOfRoutes.length +1
         var addedRoute = {
             days: "weekdays",
-            start: "7-8",
-            arrive: "7-8"
+            start: "6-7",
+            arrive: "6-7"
         };
         this.setState(prevState => ({
             routes: [...prevState.routes, addedRoute]
