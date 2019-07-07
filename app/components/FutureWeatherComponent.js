@@ -1,9 +1,8 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 
-import {API_key} from './secrets';
+import {API_key} from '../../secrets';
 
-import {FadeInImage} from './FadeInImage';
 import {WeatherComponent} from './WeatherComponent';
 import axios from 'axios';
 

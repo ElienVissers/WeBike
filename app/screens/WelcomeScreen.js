@@ -4,7 +4,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { Button } from 'react-native-elements';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
-import {FadeInImage} from './FadeInImage';
+import {CustomFadeInImage} from '../components/CustomFadeInImage';
 
 export class WelcomeScreen extends React.Component {
     constructor(props) {
@@ -37,7 +37,7 @@ export class WelcomeScreen extends React.Component {
     render() {
         return (
             <KeyboardAwareScrollView contentContainerStyle={styles.container} enableOnAndroid={true}>
-                <FadeInImage source={require('./assets/bike.png')} style={styles.mainImage} />
+                <CustomFadeInImage source={require('./assets/bike.png')} style={styles.mainImage} />
                 <View style={styles.mainContent}>
                     <Text style={styles.title}>Welcome to WeBike</Text>
                     <Text style={styles.text}>Please fill in your name and city!</Text>

@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, Button, Image, Picker, TextInput, TouchableWithoutFeedback, AsyncStorage, StyleSheet, Alert } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
-import {AddButton} from './AddButton';
+import {CustomWhiteButton} from '../components/CustomButton';
 
 export class EditRouteScreen extends React.Component {
     constructor(props) {
@@ -113,11 +113,11 @@ export class EditRouteScreen extends React.Component {
                     <Picker.Item label="22-23" value="22-23" />
                     <Picker.Item label="23-00" value="23-00" />
                 </Picker>
-                <AddButton
+                <CustomWhiteButton
                     text="save this route"
                     onPress={this.saveRoute}
                 />
-                <AddButton
+                <CustomWhiteButton
                     text="remove this route"
                     onPress={this.removeRoute}
                 />

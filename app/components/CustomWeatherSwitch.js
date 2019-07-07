@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Switch, StyleSheet, Text } from 'react-native';
 
 
-export class NotificationSwitch extends React.Component {
+export class CustomWeatherSwitch extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -11,12 +11,12 @@ export class NotificationSwitch extends React.Component {
            <View style={styles.container}>
                 <Switch
                     onValueChange={this.props.toggleSwitch}
-                    value={this.props.notify}
-                    trackColor={{false: 'silver', true: 'gold'}}
+                    value={this.props.futureWeather}
+                    trackColor={{false: 'gold', true: 'gold'}}
                     thumbColor="gold"
                 />
-                {this.props.notify && <Text style={{color:'gold'}}>{this.props.text}</Text>}
-                {!this.props.notify && <Text style={{color:'silver'}}>don't {this.props.text}</Text>}
+                {this.props.futureWeather && <Text style={{color:'gold'}}>Weather at next trip:</Text>}
+                {!this.props.futureWeather && <Text style={{color:'gold'}}>Current Weather</Text>}
            </View>
         );
     }
@@ -26,9 +26,11 @@ const styles = StyleSheet.create ({
     container: {
         flex: 1,
         flexDirection: 'row',
-        alignItems: 'stretch',
+        alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 10,
-        paddingTop: 0
+        marginBottom: 0,
+        marginTop: 40,
+        paddingTop: 0,
+        paddingBottom: 0
     }
 });

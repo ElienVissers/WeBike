@@ -1,7 +1,7 @@
 import React from 'react';
 import { Animated, Image, View } from 'react-native';
 
-export class FadeInImage extends React.Component {
+export class CustomFadeInImage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {

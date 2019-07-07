@@ -2,7 +2,7 @@ import React from "react";
 import { Text, StyleSheet, View, ScrollView, Alert } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
-import {AddButton} from './AddButton';
+import {CustomWhiteButton} from './CustomWhiteButton';
 
 export class RoutesContainer extends React.Component {
     constructor(props) {
@@ -21,7 +21,7 @@ export class RoutesContainer extends React.Component {
                                 arrive={route.arrive}
                                 days={route.days}
                             />
-                            <AddButton
+                            <CustomWhiteButton
                                 text="edit"
                                 onPress={() => {
                                     this.props.navigation.navigate('EditRouteRoute', {

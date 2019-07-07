@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, TouchableOpacity, StyleSheet } from "react-native";
 
-export class AddButton extends React.Component {
+export class CustomWhiteButton extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};

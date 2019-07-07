@@ -3,9 +3,9 @@ import { View, Text, TextInput, StyleSheet, ScrollView, AsyncStorage } from "rea
 import { Button } from 'react-native-elements';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
-import {AddButton} from './AddButton';
-import {RoutesContainer} from './RoutesContainer';
-import {NotificationSwitch} from './NotificationSwitch';
+import {CustomWhiteButton} from '../components/CustomWhiteButton';
+import {RoutesContainer} from '../components/RoutesContainer';
+import {CustomNotificationSwitch} from '../components/CustomNotificationSwitch';
 
 
 export class ProfileScreen extends React.Component {
@@ -112,7 +112,7 @@ export class ProfileScreen extends React.Component {
         });
     }
     addRoute() {
-        //to do: make this open EditRouteScreen, give default values and routeId = arrayOfRoutes.length +1 
+        //to do: make this open EditRouteScreen, give default values and routeId = arrayOfRoutes.length +1
         var addedRoute = {
             days: "weekdays",
             start: "7-8",
@@ -151,13 +151,13 @@ export class ProfileScreen extends React.Component {
                         </View>
                     </View>
 
-                    <NotificationSwitch
+                    <CustomNotificationSwitch
                         toggleSwitch = {this.toggleSwitch1h}
                         notify = {this.state.notify1hAdvance}
                         text = "notify me 1 hour before"
                     />
 
-                    <NotificationSwitch
+                    <CustomNotificationSwitch
                         toggleSwitch = {this.toggleSwitchStart}
                         notify = {this.state.notifyAtStart}
                         text = "notify me when I start"
@@ -176,7 +176,7 @@ export class ProfileScreen extends React.Component {
 
                     <Text style={{color: 'white', fontSize: 20, flex: 1}}>Spacing</Text>
 
-                    <AddButton
+                    <CustomWhiteButton
                         style={{flex: 1, marginBottom: 30}}
                         text="add bike route"
                         onPress={this.addRoute}

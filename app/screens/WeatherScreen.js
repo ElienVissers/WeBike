@@ -4,11 +4,10 @@ import { createStackNavigator, createAppContainer } from "react-navigation";
 
 import axios from 'axios';
 
-import {FadeInImage} from './FadeInImage';
-import {ProfileLogo} from './ProfileLogo';
-import {WeatherSwitch} from './WeatherSwitch';
-import {CurrentWeatherComponent} from './CurrentWeatherComponent';
-import {FutureWeatherComponent} from './FutureWeatherComponent';
+import {ProfileLogo} from '../components/ProfileLogo';
+import {CustomWeatherSwitch} from '../components/CustomWeatherSwitch';
+import {CurrentWeatherComponent} from '../components/CurrentWeatherComponent';
+import {FutureWeatherComponent} from '../components/FutureWeatherComponent';
 
 export class CurrentWeatherScreen extends React.Component {
     constructor(props) {
@@ -386,7 +385,7 @@ export class CurrentWeatherScreen extends React.Component {
                     {this.state.futureWeather && this.state.nextTrip && this.state.routes && <FutureWeatherComponent city={this.state.city} startDay={this.state.startDay} startTime={this.state.startTime} nextTrip={this.state.nextTrip} key={this.state.nextTrip + this.state.city} />}
                 </View>
                 <View style={{flex:1, justifyContent:'center', alignItems: 'center'}}>
-                    {this.state.routes && this.state.routes.length > 0 && <WeatherSwitch
+                    {this.state.routes && this.state.routes.length > 0 && <CustomWeatherSwitch
                         toggleSwitch = {this.toggleSwitch}
                         futureWeather = {this.state.futureWeather}
                     />}

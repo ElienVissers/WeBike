@@ -4,11 +4,11 @@ import { createSwitchNavigator, createStackNavigator, createAppContainer } from 
 
 import { registerRootComponent } from 'expo';
 
-import {WelcomeScreen} from '../WelcomeScreen';
-import {ProfileScreen} from '../ProfileScreen';
-import {CurrentWeatherScreen} from '../CurrentWeatherScreen';
-import {EditRouteScreen} from '../EditRouteScreen';
-import {LoadingScreen} from '../LoadingScreen';
+import {WelcomeScreen} from './screens/WelcomeScreen';
+import {ProfileScreen} from './screens/ProfileScreen';
+import {CurrentWeatherScreen} from './screens/WeatherScreen';
+import {EditRouteScreen} from './screens/EditRouteScreen';
+import {LoadingScreen} from './screens/LoadingScreen';
 
 const AppStack = createStackNavigator(
     {
