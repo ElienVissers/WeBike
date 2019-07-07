@@ -10,7 +10,7 @@ export class ProfileLogo extends React.Component {
         return (
         <Image
             {...this.props}
-            source={require('./assets/bike.png')}
+            source={require('../../assets/bike.png')}
             style={{flex:1, width: 50, height: 35, margin: 10}}
             resizeMode="contain"
         />

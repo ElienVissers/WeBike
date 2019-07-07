@@ -18,7 +18,7 @@ export class LoadingScreen extends React.Component {
             <View>
                 <ActivityIndicator />
                 <StatusBar barStyle="default" />
-                <Image source={require('./assets/bike.png')} />
+                <Image source={require('../../assets/bike.png')} />
             </View>
         );
     }

@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, Button, Image, Picker, TextInput, TouchableWithoutFeedback, AsyncStorage, StyleSheet, Alert } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
-import {CustomWhiteButton} from '../components/CustomButton';
+import {CustomWhiteButton} from '../components/CustomWhiteButton';
 
 export class EditRouteScreen extends React.Component {
     constructor(props) {
