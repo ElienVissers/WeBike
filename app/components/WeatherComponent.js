@@ -21,7 +21,6 @@ export class WeatherComponent extends React.Component {
         }
     }
     render() {
-        console.log("id: ", this.props.id, typeof this.props.id);
         if (!this.props.id) {
             return null;
         }
