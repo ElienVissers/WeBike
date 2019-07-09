@@ -14,10 +14,12 @@ The user sees relevant weather information along with motivated cycling messages
 
 - Future-Weather information
 
-The user can add up to 4 weekly cycling routes, e.g. "In the weekend from 10-12h.".
+The user can add weekly cycling routes, e.g. "In the weekend from 10-12h.".
 Based on these trips, the user can see an updated weather forecast for the starting time of the next upcoming cycling trip.
 
 ## Roadmap
 
-- Notifications (at start of next trip, or one hour in advance)
+- Push Notifications (at start of next trip, or one hour in advance)
+- Deployment to AppStore and PlayStore
 - Adding friends with weekly rankings (km's cycled)
+- Bike Calendar instead of weekly routes
