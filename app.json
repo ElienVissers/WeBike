@@ -3,7 +3,7 @@
     "name": "WeBike",
     "slug": "WeBike",
     "privacy": "public",
-    "sdkVersion": "32.0.0",
+    "sdkVersion": "33.0.0",
     "platforms": [
       "ios",
       "android"
@@ -23,8 +23,7 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
-      "bundleIndentifier": "exp.host.elienvisserssimilon.WeBike"
+      "supportsTablet": true
     },
     "android": {
         "package": "exp.host.elienvisserssimilon.WeBike"

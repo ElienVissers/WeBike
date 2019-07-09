@@ -9,17 +9,23 @@
   "dependencies": {
     "axios": "^0.19.0",
     "body-parser": "^1.19.0",
-    "expo": "^33.0.7",
+    "expo": "^33.0.0",
     "express": "^4.17.1",
-    "react": "16.8.6",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "react": "16.8.3",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
     "react-native-elements": "^1.1.0",
     "react-native-keyboard-aware-scroll-view": "^0.8.0",
     "react-native-multi-slider": "^0.3.6",
     "react-navigation": "^3.11.0"
   },
   "devDependencies": {
-    "babel-preset-expo": "^5.2.0"
+    "babel-preset-expo": "^5.2.0",
+    "braces": "^3.0.2",
+    "js-yaml": "^3.13.1",
+    "mem": "^5.1.1",
+    "path": "^0.12.7",
+    "wc": "0.0.1",
+    "ws": "^7.0.1"
   },
   "private": true
 }
